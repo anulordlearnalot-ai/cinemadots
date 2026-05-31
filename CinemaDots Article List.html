@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CinemaDots — ภาพยนตร์ · รวมบทความ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/cinemadots.css" />
+<style>
+  /* ════════ ARCHIVE HEADER ════════ */
+  .listhead{padding:56px var(--gut) 0;display:flex;flex-direction:column;gap:18px}
+  .listhead .crumb{margin-bottom:6px}
+  .listhead .htitle{margin:0;font-family:var(--sans);font-weight:600;font-size:clamp(40px,6vw,68px);line-height:1.02;letter-spacing:-.5px;color:var(--ink);display:flex;align-items:center;gap:18px}
+  .listhead .htitle .bdot{width:16px;height:16px;border-radius:50%;background:var(--blue);flex:0 0 auto;transform:translateY(2px)}
+  .listhead .standfirst{margin:0;font-family:var(--serif);font-weight:400;font-size:19px;line-height:30px;color:var(--ink-2);max-width:62ch;text-wrap:pretty}
+  .listhead .count{font-family:var(--mono);font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--ink-2)}
+
+  /* ════════ TAG FILTER BAR ════════ */
+  .tagbar{padding:30px var(--gut) 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .tagbar .tlabel{font-family:var(--sans);font-weight:500;font-size:13px;letter-spacing:.4px;color:var(--ink-2);margin-right:4px}
+
+  /* ════════ FEATURED (horizontal) ════════ */
+  .feat{padding:40px var(--gut) 0}
+  .feat a{display:grid;grid-template-columns:1.18fr 1fr;gap:0;background:var(--yellow);align-items:stretch}
+  .feat .fimg{aspect-ratio:16/11;--chip:#1a1410}
+  .feat .ftext{padding:44px 40px;display:flex;flex-direction:column;gap:16px;justify-content:center}
+  .feat .ftext h2{margin:0;font-family:var(--sans);font-weight:600;font-size:clamp(24px,2.4vw,32px);line-height:1.18;color:var(--ink);text-wrap:pretty}
+  .feat .ftext p{margin:0;font-family:var(--serif);font-weight:400;font-size:16px;line-height:25px;color:var(--ink-2);text-wrap:pretty;max-width:46ch}
+  .feat .metaline{display:flex;align-items:center;gap:10px;margin-top:4px}
+  .feat .metaline .date{font-family:var(--sans);font-weight:500;font-size:13px;letter-spacing:.4px;color:var(--ink-2)}
+  .feat .metaline .mdot{width:3px;height:3px;border-radius:50%;background:var(--ink-2);opacity:.6}
+
+  /* ════════ BODY: grid + sidebar ════════ */
+  .listwrap{padding:64px var(--gut) 0;display:grid;grid-template-columns:1fr 296px;gap:56px;align-items:start}
+  .grid{display:grid;grid-template-columns:1fr 1fr;column-gap:32px;row-gap:44px}
+  .acard{display:flex;flex-direction:column}
+  .acard .img{aspect-ratio:3/2;--chip:#1c2733}
+  .acard .body{padding-top:14px;display:flex;flex-direction:column;gap:8px}
+  .acard h3{margin:0;font-family:var(--sans);font-weight:500;font-size:20px;line-height:27px;color:var(--ink);text-wrap:pretty}
+  .acard p{margin:0;font-family:var(--serif);font-weight:400;font-size:14px;line-height:23px;color:var(--ink-2);text-wrap:pretty}
+  .acard .metaline{display:flex;align-items:center;gap:9px;margin-top:1px}
+  .acard .metaline .date{font-family:var(--sans);font-weight:500;font-size:12px;letter-spacing:.3px;color:var(--ink-2)}
+  .acard .metaline .mdot{width:3px;height:3px;border-radius:50%;background:var(--ink-2);opacity:.55}
+
+  /* sidebar */
+  .aside{position:sticky;top:96px;display:flex;flex-direction:column;gap:44px}
+  .aside .blk{display:flex;flex-direction:column}
+  .aside .blk-head{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+  .aside .blk-head .dot{width:7px;height:7px;border-radius:3.5px;background:var(--blue);flex:0 0 auto}
+  .aside .blk-head .lbl{font-family:var(--sans);font-weight:500;font-size:16px;line-height:1;letter-spacing:1px;color:var(--ink)}
+  .aside .blk-head .rule{flex:1 1 auto;height:1px;background:var(--ink);min-width:16px}
+  .aside .litem{display:flex;flex-direction:column;gap:6px;padding:18px 0;
+    background-image:repeating-linear-gradient(to right,#c4c4c4 0 6px,transparent 6px 11px);
+    background-repeat:no-repeat;background-position:left bottom;background-size:100% 1px}
+  .aside .litem h4{margin:0;font-family:var(--sans);font-weight:500;font-size:15px;line-height:21px;color:var(--ink);text-wrap:pretty}
+  .aside .litem .date{font-family:var(--sans);font-weight:500;font-size:12px;letter-spacing:.3px;color:var(--ink-2)}
+  .aside .cloud{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+
+  /* ════════ PAGINATION ════════ */
+  .pager{padding:56px var(--gut) 0;display:flex;justify-content:center;align-items:center;gap:8px}
+  .pager a,.pager span{min-width:44px;height:44px;padding:0 8px;display:inline-flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:13px;color:var(--ink);border-radius:999px;border:1px solid transparent}
+  .pager a:hover{border-color:var(--rule)}
+  .pager .cur{background:var(--ink);color:var(--white)}
+  .pager .gap{border:0;color:var(--ink-2)}
+  .pager .nav{border:1px solid var(--ink);letter-spacing:1.4px;font-size:11px;padding:0 18px}
+  .pager .nav:hover{background:var(--ink);color:var(--white)}
+
+  /* ════════ RESPONSIVE ════════ */
+  @media (max-width:1023px){
+    .feat a{grid-template-columns:1fr}
+    .feat .fimg{aspect-ratio:16/9}
+    .feat .ftext{padding:32px 28px}
+    .listwrap{grid-template-columns:1fr;gap:64px}
+    .aside{position:static;flex-direction:row;flex-wrap:wrap;gap:48px}
+    .aside .blk{flex:1 1 280px}
+  }
+  @media (max-width:640px){
+    .listhead{padding-top:36px}
+    .grid{grid-template-columns:1fr;row-gap:36px}
+    .feat .ftext h2{font-size:24px}
+    .aside{flex-direction:column;gap:40px}
+    .pager .nav span{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- APP BAR -->
+  <header class="appbar">
+    <button class="iconbtn menu" id="menuBtn" aria-label="เปิดเมนู" aria-expanded="false"><span></span><span></span><span></span></button>
+    <a class="logo" href="CinemaDots Home - Wireframe Build v2-2.html" aria-label="CinemaDots — หน้าแรก">Cinema<span class="dot" aria-hidden="true"></span>Dots</a>
+    <button class="iconbtn search" id="searchBtn" aria-label="ค้นหา" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+    </button>
+  </header>
+
+  <!-- CATEGORY NAV -->
+  <nav class="catnav" aria-label="หมวดหมู่หลัก">
+    <a class="is-active" href="CinemaDots Article List.html"><span class="d"></span>ภาพยนตร์</a>
+    <a href="CinemaDots Article List.html"><span class="d"></span>บุคคล</a>
+    <a href="CinemaDots Article List.html"><span class="d"></span>ดนตรี</a>
+    <a href="CinemaDots Article List.html"><span class="d"></span>หนังสือ</a>
+    <a href="CinemaDots Article List.html"><span class="d"></span>ประวัติศาสตร์</a>
+  </nav>
+
+  <main data-screen-label="02 Article List — ภาพยนตร์">
+
+    <!-- ARCHIVE HEADER -->
+    <section class="listhead" aria-label="หมวดหมู่ ภาพยนตร์">
+      <div class="crumb"><a href="CinemaDots Home - Wireframe Build v2-2.html">หน้าแรก</a><span class="sep">/</span><span class="here">ภาพยนตร์</span></div>
+      <h1 class="htitle"><span class="bdot" aria-hidden="true"></span>ภาพยนตร์</h1>
+      <p class="standfirst">บทวิจารณ์ เรียงความ และบทสัมภาษณ์ว่าด้วยภาพยนตร์ — จากเทศกาลระดับโลกถึงโรงหนังใกล้บ้าน ทุกเรื่องเริ่มต้นที่ภาพเคลื่อนไหว แล้วพาเราเดินทางไปไกลกว่านั้น</p>
+      <span class="count">48 บทความ · อัปเดตล่าสุด 24 พ.ค. 2569</span>
+    </section>
+
+    <!-- TAG FILTER -->
+    <nav class="tagbar" aria-label="กรองด้วยป้ายกำกับ">
+      <span class="tlabel">ป้ายกำกับ</span>
+      <a class="tag is-active" href="CinemaDots Article List.html"><span class="d"></span>ทั้งหมด</a>
+      <a class="tag" href="CinemaDots Article List.html">บทวิจารณ์</a>
+      <a class="tag" href="CinemaDots Article List.html">เรียงความ</a>
+      <a class="tag" href="CinemaDots Article List.html">สัมภาษณ์</a>
+      <a class="tag" href="CinemaDots Article List.html">เทศกาล Cannes</a>
+      <a class="tag" href="CinemaDots Article List.html">หนังไทย</a>
+      <a class="tag" href="CinemaDots Article List.html">นิยายดัดแปลง</a>
+    </nav>
+
+    <!-- FEATURED -->
+    <section class="feat" aria-label="บทความเด่น">
+      <a href="CinemaDots Article.html">
+        <div class="ph fimg"><img class="fill" src="https://assets.mubicdn.net/images/notebook/post_images/43249/images-w1400.jpg?1779292727" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">featured · 16:11</span></div>
+        <div class="ftext">
+          <span class="kicker">ภาพยนตร์<span class="sep"></span><span class="alt">บทวิจารณ์</span></span>
+          <h2>‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน และบทพิสูจน์ว่าแฟรนไชส์เก่าแก่นี้ยังเดินทางต่อไปได้อีกไกล</h2>
+          <p>Cailee Spaeny และ David Jonsson เป็นส่วนที่ดีที่สุดของหนังชุด ‘Alien’ ที่ผิดหวังในแบบที่ยังดีกว่าหลายภาคก่อนหน้า</p>
+          <div class="metaline"><span class="byline">CinemaDots</span><span class="mdot"></span><span class="date">24 พ.ค. 2569</span><span class="mdot"></span><span class="date">อ่าน 7 นาที</span></div>
+        </div>
+      </a>
+    </section>
+
+    <!-- GRID + SIDEBAR -->
+    <div class="listwrap">
+      <section class="grid" aria-label="รายการบทความ">
+        <a class="acard" href="CinemaDots Article.html">
+          <div class="ph img" style="--chip:#3a2419"><img class="fill" src="https://i.pinimg.com/736x/93/5e/ac/935eac5071b0e5cf77be12b71d27016f.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">still · 35mm</span></div>
+          <div class="body"><span class="kicker">ภาพยนตร์<span class="sep"></span><span class="alt">บทวิจารณ์</span></span>
+            <h3>เมื่อแสงนีออนกลายเป็นภาษา: งานภาพของหนังนัวร์ร่วมสมัย</h3>
+            <p>ว่าด้วยการจัดแสงที่เปลี่ยนเมืองทั้งเมืองให้กลายเป็นตัวละคร</p>
+            <div class="metaline"><span class="byline">CinemaDots</span><span class="mdot"></span><span class="date">22 พ.ค. 2569</span></div>
+          </div>
+        </a>
+        <a class="acard" href="CinemaDots Article.html">
+          <div class="ph img" style="--chip:#1c2733"><img class="fill" src="https://i.pinimg.com/1200x/b6/ea/2f/b6ea2f61fc060c7eda3b8b0c6f2380f2.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">dusk skyline</span></div>
+          <div class="body"><span class="kicker">ภาพยนตร์<span class="sep"></span><span class="alt">เรียงความ</span></span>
+            <h3>เวลาในหนังของ Hamaguchi: บทสนทนาที่ไม่เคยรีบร้อน</h3>
+            <p>ทำไมความยาวจึงเป็นเครื่องมือ ไม่ใช่อุปสรรค</p>
+            <div class="metaline"><span class="byline">CinemaDots</span><span class="mdot"></span><span class="date">20 พ.ค. 2569</span></div>
+          </div>
+        </a>
+        <a class="acard" href="CinemaDots Article.html">
+          <div class="ph img" style="--chip:#221f2c"><img class="fill" src="https://i.pinimg.com/1200x/45/30/f7/4530f79dd444ae085f2a1469bc97c1ab.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">archive · poster</span></div>
+          <div class="body"><span class="kicker">ภาพยนตร์<span class="sep"></span><span class="alt">เทศกาล Cannes</span></span>
+            <h3>คานส์ 2026: เก้าเรื่องที่เราเฝ้ารอจากสาย Competition</h3>
+            <p>ไล่เรียงผู้กำกับและหนังที่จะลงประชันปาล์มทองปีนี้</p>
+            <div class="metaline"><span class="byline">CinemaDots</span><span class="mdot"></span><span class="date">18 พ.ค. 2569</span></div>
+          </div>
+        </a>
+        <a class="acard" href="CinemaDots Article.html">
+          <div class="ph img" style="--chip:#2a1b2e"><img class="fill" src="https://i.pinimg.com/1200x/96/49/cb/9649cb8d5a90dba5ffe44b415007681a.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">interior · warm</span></div>
+          <div class="body"><span class="kicker">ภาพยนตร์<span class="sep"></span><span class="alt">หนังไทย</span></span>
+            <h3>หนังไทยอิสระปี 2569 ที่ควรค่าแก่การตามดูในโรงเล็ก</h3>
+            <p>เจ็ดเรื่องนอกกระแสที่กำลังหาที่ทางของตัวเอง</p>
+            <div class="metaline"><span class="byline">CinemaDots</span><span class="mdot"></span><span class="date">15 พ.ค. 2569</span></div>
+          </div>
+        </a>
+        <a class="acard" href="CinemaDots Article.html">
+          <div class="ph img" style="--chip:#332218"><img class="fill" src="https://i.pinimg.com/1200x/ef/7f/ac/ef7fac69e9043c8f38e20ad830b36296.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">golden hour</span></div>
+          <div class="body"><span class="kicker">ภาพยนตร์<span class="sep"></span><span class="alt">นิยายดัดแปลง</span></span>
+            <h3>จากหน้ากระดาษสู่จอเงิน: ศิลปะของการตัดทอน</h3>
+            <p>นักเขียนบทเล่าถึงสิ่งที่ต้องยอมสละเพื่อให้เรื่องอยู่รอด</p>
+            <div class="metaline"><span class="byline">CinemaDots</span><span class="mdot"></span><span class="date">12 พ.ค. 2569</span></div>
+          </div>
+        </a>
+        <a class="acard" href="CinemaDots Article.html">
+          <div class="ph img" style="--chip:#1c2733"><img class="fill" src="https://i.pinimg.com/1200x/6d/01/4d/6d014d71f52593006ea2a7f1fcf4b00c.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">portrait · b/w</span></div>
+          <div class="body"><span class="kicker">ภาพยนตร์<span class="sep"></span><span class="alt">สัมภาษณ์</span></span>
+            <h3>คุยกับผู้กำกับภาพ: การมองหาความเงียบในเฟรม</h3>
+            <p>บทสนทนาว่าด้วยจังหวะ ความว่าง และการรอคอย</p>
+            <div class="metaline"><span class="byline">CinemaDots</span><span class="mdot"></span><span class="date">9 พ.ค. 2569</span></div>
+          </div>
+        </a>
+        <a class="acard" href="CinemaDots Article.html">
+          <div class="ph img" style="--chip:#3a1a1a"><img class="fill" src="https://i.pinimg.com/736x/20/47/3f/20473fd21f57b8c74059cc359d5199b2.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">archive · still</span></div>
+          <div class="body"><span class="kicker">ภาพยนตร์<span class="sep"></span><span class="alt">เรียงความ</span></span>
+            <h3>ความทรงจำแบบฟิล์ม: ทำไมเรายังคิดถึงเกรนและฝุ่น</h3>
+            <p>ว่าด้วยเสน่ห์ของสื่อที่ไม่สมบูรณ์แบบในยุคดิจิทัล</p>
+            <div class="metaline"><span class="byline">CinemaDots</span><span class="mdot"></span><span class="date">6 พ.ค. 2569</span></div>
+          </div>
+        </a>
+        <a class="acard" href="CinemaDots Article.html">
+          <div class="ph img" style="--chip:#2c2218"><img class="fill" src="https://i.pinimg.com/736x/03/20/ee/0320ee293d3484ca4c9bdc56f6c100bf.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">crowd · festival</span></div>
+          <div class="body"><span class="kicker">ภาพยนตร์<span class="sep"></span><span class="alt">บทวิจารณ์</span></span>
+            <h3>สารคดีดนตรีที่เล่าเรื่องเมืองได้ดีกว่าหนังเมืองหลายเรื่อง</h3>
+            <p>เมื่อกล้องตามวงดนตรี แล้วบังเอิญบันทึกยุคสมัยทั้งยุค</p>
+            <div class="metaline"><span class="byline">CinemaDots</span><span class="mdot"></span><span class="date">3 พ.ค. 2569</span></div>
+          </div>
+        </a>
+      </section>
+
+      <!-- SIDEBAR -->
+      <aside class="aside" aria-label="แถบข้าง">
+        <div class="blk">
+          <div class="blk-head"><span class="dot"></span><span class="lbl">Latest</span><span class="rule"></span></div>
+          <a class="litem" href="CinemaDots Article.html"><h4>Park Chan-wook กับการรับเก้าอี้ประธานคณะกรรมการคานส์</h4><span class="date">บุคคล · 23 พ.ค. 2569</span></a>
+          <a class="litem" href="CinemaDots Article.html"><h4>เพลงประกอบที่กลายเป็นตัวละครหนึ่งของเรื่อง</h4><span class="date">ดนตรี · 21 พ.ค. 2569</span></a>
+          <a class="litem" href="CinemaDots Article.html"><h4>จุดต้นกำเนิดภาพลักษณ์แห่งเทศกาลเมืองคานส์</h4><span class="date">ประวัติศาสตร์ · 19 พ.ค. 2569</span></a>
+          <a class="litem" href="CinemaDots Article.html"><h4>การอ่านควบคู่: หนังสือที่กลายเป็นภาพยนตร์ในปีนี้</h4><span class="date">หนังสือ · 17 พ.ค. 2569</span></a>
+        </div>
+        <div class="blk">
+          <div class="blk-head"><span class="dot"></span><span class="lbl">ป้ายกำกับ</span><span class="rule"></span></div>
+          <div class="cloud">
+            <a class="tag" href="CinemaDots Article List.html"><span class="d"></span>บทวิจารณ์</a>
+            <a class="tag" href="CinemaDots Article List.html"><span class="d"></span>เทศกาล Cannes</a>
+            <a class="tag" href="CinemaDots Article List.html"><span class="d"></span>หนังไทย</a>
+            <a class="tag" href="CinemaDots Article List.html"><span class="d"></span>ฟิล์ม นัวร์</a>
+            <a class="tag" href="CinemaDots Article List.html"><span class="d"></span>เรียงความ</a>
+            <a class="tag" href="CinemaDots Article List.html"><span class="d"></span>สัมภาษณ์</a>
+            <a class="tag" href="CinemaDots Article List.html"><span class="d"></span>นิยายดัดแปลง</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- PAGINATION -->
+    <nav class="pager" aria-label="หน้า">
+      <span class="cur">1</span>
+      <a href="CinemaDots Article List.html">2</a>
+      <a href="CinemaDots Article List.html">3</a>
+      <a href="CinemaDots Article List.html">4</a>
+      <span class="gap">…</span>
+      <a href="CinemaDots Article List.html">8</a>
+      <a class="nav" href="CinemaDots Article List.html">ถัดไป <span>→</span></a>
+    </nav>
+
+  </main>
+
+  <!-- FOOTER -->
+  <div class="footer-wrap">
+    <footer class="footer">
+      <div class="cols">
+        <div class="brand">
+          <a class="logo" href="CinemaDots Home - Wireframe Build v2-2.html">Cinema<span class="dot" aria-hidden="true"></span>Dots</a>
+          <p class="quote">“เมื่อภาพยนตร์ คือจุดเริ่มต้น — และจากที่นั่น เราเดินทางไปทุกที่”</p>
+          <div class="wordmark">CINEMADOTS</div>
+          <div class="socials">
+            <a aria-label="facebook" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l1-4h-4V7.5c0-1.1.4-2 2-2h2V2h-3c-3 0-4 1.8-4 4v4H7v4h3v8z"/></svg></a>
+            <a aria-label="instagram" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg></a>
+            <a aria-label="x" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 3h3l-7 8 8 10h-6l-5-6-5 6H3l8-9L3 3h6l4 5z"/></svg></a>
+            <a aria-label="threads" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M19 8c-1-3-3-5-7-5s-7 2-7 8 3 9 7 9c3 0 5-2 5-4s-2-3-5-3-4 1-4 2"/></svg></a>
+          </div>
+        </div>
+        <div class="lcol">
+          <h6><span class="d"></span>ภาพยนตร์</h6>
+          <ul><li><a href="CinemaDots Article List.html">บทวิจารณ์</a></li><li><a href="CinemaDots Article List.html">เรียงความ</a></li><li><a href="CinemaDots Article List.html">สัมภาษณ์</a></li><li><a href="CinemaDots Article List.html">เทศกาล Cannes</a></li><li><a href="CinemaDots Article List.html">หนังไทย</a></li></ul>
+        </div>
+        <div class="lcol">
+          <h6><span class="d"></span>บุคคล</h6>
+          <ul><li><a href="CinemaDots Article List.html">ผู้กำกับ</a></li><li><a href="CinemaDots Article List.html">นักแสดง</a></li><li><a href="CinemaDots Article List.html">นักเขียนบท</a></li><li><a href="CinemaDots Article List.html">ช่างภาพ</a></li><li><a href="CinemaDots Article List.html">ทีมหลังกล้อง</a></li></ul>
+        </div>
+        <div class="lcol">
+          <h6><span class="d"></span>ดนตรี</h6>
+          <ul><li><a href="CinemaDots Article List.html">เพลงประกอบ</a></li><li><a href="CinemaDots Article List.html">ศิลปิน</a></li><li><a href="CinemaDots Article List.html">อัลบั้ม</a></li><li><a href="CinemaDots Article List.html">บทสัมภาษณ์</a></li><li><a href="CinemaDots Article List.html">รายการคัดสรร</a></li></ul>
+        </div>
+        <div class="lcol">
+          <h6><span class="d"></span>หนังสือ</h6>
+          <ul><li><a href="CinemaDots Article List.html">การอ่านควบคู่</a></li><li><a href="CinemaDots Article List.html">บทวิจารณ์หนังสือ</a></li><li><a href="CinemaDots Article List.html">เรียงความ</a></li><li><a href="CinemaDots Article List.html">รายการคัดสรร</a></li><li><a href="CinemaDots Article List.html">การเขียนบท</a></li></ul>
+        </div>
+        <div class="lcol">
+          <h6><span class="d"></span>ประวัติศาสตร์</h6>
+          <ul><li><a href="CinemaDots Article List.html">หนังไทยยุค 2510s</a></li><li><a href="CinemaDots Article List.html">หนังไทยยุค 2520s</a></li><li><a href="CinemaDots Article List.html">ฟิล์ม นัวร์</a></li><li><a href="CinemaDots Article List.html">คลังภาพ</a></li><li><a href="CinemaDots Article List.html">โรงหนังเก่า</a></li></ul>
+        </div>
+      </div>
+      <div class="legal">
+        <span>© 2569 CINEMADOTS — ALL THOUGHTS WELCOME.</span>
+        <span class="rt"><a href="#">Terms</a><span class="sep">·</span><a href="#">Privacy</a><span class="sep">·</span><a href="#">RSS</a><span class="sep">·</span><a href="/cdn-cgi/l/email-protection#f89b97968c999b8cb89b91969d95999c978c8bd68c90"><span class="__cf_email__" data-cfemail="eb8884859f8a889fab8882858e868a8f849f98c59f83">[email&#160;protected]</span></a></span>
+      </div>
+    </footer>
+  </div>
+
+</div>
+
+<!-- MENU OVERLAY -->
+<div class="overlay-panel" id="menuPanel" role="dialog" aria-modal="true" aria-label="เมนูหลัก">
+  <div class="overlay-top">
+    <span></span>
+    <a class="logo" href="CinemaDots Home - Wireframe Build v2-2.html">Cinema<span class="dot" aria-hidden="true"></span>Dots</a>
+    <button class="overlay-close" data-close aria-label="ปิดเมนู"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <nav class="menu-body" aria-label="หมวดหมู่ทั้งหมด">
+    <a class="mlink" href="CinemaDots Article List.html">ภาพยนตร์<span class="d"></span></a>
+    <a class="mlink" href="CinemaDots Article List.html">บุคคล<span class="d"></span></a>
+    <a class="mlink" href="CinemaDots Article List.html">ดนตรี<span class="d"></span></a>
+    <a class="mlink" href="CinemaDots Article List.html">หนังสือ<span class="d"></span></a>
+    <a class="mlink" href="CinemaDots Article List.html">ประวัติศาสตร์<span class="d"></span></a>
+    <div class="menu-foot">
+      <span>ฉบับสัปดาห์ที่ 047 · 2569</span>
+      <span>สมัครรับจดหมายข่าว →</span>
+    </div>
+  </nav>
+</div>
+
+<!-- SEARCH OVERLAY -->
+<div class="overlay-panel" id="searchPanel" role="dialog" aria-modal="true" aria-label="ค้นหา">
+  <div class="overlay-top">
+    <span></span>
+    <a class="logo" href="CinemaDots Home - Wireframe Build v2-2.html">Cinema<span class="dot" aria-hidden="true"></span>Dots</a>
+    <button class="overlay-close" data-close aria-label="ปิดการค้นหา"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="search-body">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+      <input id="searchInput" type="search" placeholder="ค้นหาบทความ ผู้กำกับ หรือภาพยนตร์…" autocomplete="off" />
+    </div>
+    <div class="search-sugg">
+      <span class="lbl">คำค้นยอดนิยม</span>
+      <div class="chips">
+        <a href="CinemaDots Article List.html">Cannes 2026</a>
+        <a href="CinemaDots Article List.html">Hirokazu Koreeda</a>
+        <a href="CinemaDots Article List.html">Alien: Romulus</a>
+        <a href="CinemaDots Article List.html">Park Chan-wook</a>
+        <a href="CinemaDots Article List.html">ฟิล์ม นัวร์</a>
+        <a href="CinemaDots Article List.html">เพลงประกอบ</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="assets/cinemadots.js"></script>
+</body>
+</html>
