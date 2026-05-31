@@ -3,1312 +3,678 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CinemaDots — ฉบับสัปดาห์ที่ 047</title>
+<title>CinemaDots — Homepage (Hi-Fi · Desktop · Tablet · Mobile)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap" rel="stylesheet" />
 <style>
   :root{
-    --bg:#FFFFFF;
-    --paper:#F7F7F4;
-    --ink:#0D0D0D;
-    --ink-2:#3D3D3D;     /* standfirst grey */
-    --ink-3:#0D0D0D;     /* byline stamp — same as ink for boldness */
-    --mute:#6B6B6B;
-    --rule:#E8E8E8;
-    --rule-2:#D6D6D6;
-    --rule-dashed:#E5E5E5;
-    --accent:#0014FF;
-    --accent-2:#1F36FF;
-    --warm:#EEDFC9;     /* music card cream */
-    --warm-2:#E4D2B6;
-    --coral:#EE7575;    /* figma hero block (legacy) */
-    --cream:#FBEDBF;    /* figma hero ground (legacy) */
-    --night:#0A0A0A;
-    /* hero-frame poster stripes — Cannes affiche reference (exclusive to hero) */
-    --frame-coral:#F08272;
-    --frame-warm:#FBEDBF;
-    --frame-stripes: repeating-linear-gradient(135deg, var(--frame-coral) 0 32px, var(--frame-warm) 32px 64px);
-    /* music section pill */
-    --pill-bg:#0D0D0D;
-    --pill-ink:#FFFFFF;
+    /* ── Color tokens (from the hi-fi file) ── */
+    --ink:#0d0d0d;          /* headings, nav, 1px rules, outline buttons */
+    --ink-2:#3d3d3d;        /* body, bylines, small grey dots */
+    --blue:#0014ff;         /* the "dot", kickers, accent dots */
+    --white:#ffffff;
+    --dark:#0a0a0a;         /* director feature + footer */
+    --yellow:#f0e800;       /* hero figure panel */
+    --rule:#e8e8e8;         /* bar borders, column dividers */
+    --rule-2:#e5e5e5;       /* dividers inside latest / music lists */
+    --cream:#f0e6d8;        /* footer logo + headings */
+    --cream-2:#d7d2c8;      /* footer links / quote */
     /* type families */
     --sans:'IBM Plex Sans Thai', system-ui, sans-serif;
-    --display:'IBM Plex Sans Thai', system-ui, sans-serif;
-    --serif:'Sarabun', 'IBM Plex Sans Thai', system-ui, sans-serif;
+    --serif:'Sarabun', 'IBM Plex Sans Thai', serif;
     --mono:'IBM Plex Mono', ui-monospace, monospace;
+    /* responsive side gutter */
+    --gut:40px;
   }
   *{box-sizing:border-box}
   figure{margin:0}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
-  body{font-size:16px;line-height:1.55}
+  html,body{margin:0;padding:0}
+  body{background:var(--white);font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased}
   a{color:inherit;text-decoration:none}
-  img{display:block;max-width:100%}
   button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
-  ::selection{background:var(--accent);color:#fff}
+  ::selection{background:var(--blue);color:#fff}
 
-  /* ─────────── 01 · HEADER (centered logo) ─────────── */
-  .topbar{
-    position:sticky;top:0;z-index:30;background:var(--bg);
-    border-bottom:1px solid var(--rule);
-    display:grid;grid-template-columns:48px 1fr 48px;align-items:center;
-    height:60px;padding:0 12px;transition:height .25s,box-shadow .25s;
-  }
-  .topbar.scrolled{box-shadow:0 8px 20px -14px rgba(0,0,0,.18);height:54px}
-  .brand{
-    font-family:var(--serif);font-weight:700;font-size:24px;letter-spacing:-.01em;line-height:1;color:var(--ink);
-    display:inline-flex;align-items:center;justify-content:center;
-  }
-  .brand .dot{width:13px;height:13px;border-radius:50%;background:var(--accent);display:inline-block;margin:0 1px;transform:translateY(-1px)}
-  .iconbtn{width:48px;height:48px;display:grid;place-items:center;border-radius:50%;color:var(--ink)}
-  .iconbtn:active{background:#F3F3F3}
-  .iconbtn svg{width:20px;height:20px}
-  .iconbtn.hamburger{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
-  .iconbtn.hamburger span{width:22px;height:1.8px;background:currentColor;display:block}
+  /* full-bleed desktop: fills the viewport left-to-right at any width */
+  .page{width:100%;background:var(--white)}
+  /* roomier gutters on large/ultra-wide screens so content isn't glued to the edges */
+  @media (min-width:1440px){:root{--gut:72px}}
+  @media (min-width:1920px){:root{--gut:120px}}
+  @media (min-width:2560px){:root{--gut:200px}}
 
-  /* secondary nav row (desktop only) */
-  .nav-row{display:none;border-bottom:1px solid var(--rule);background:var(--bg)}
+  /* shared placeholder image block (color-chip + gradient + mono caption) */
+  .ph{position:relative;background:var(--chip,#1a1410);overflow:hidden}
+  .ph::after{content:"";position:absolute;inset:0;background:
+    linear-gradient(180deg, rgba(255,255,255,.05) 0%, rgba(0,0,0,.18) 55%, rgba(0,0,0,.5) 100%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.025) 0 2px, transparent 2px 7px);}
+  .ph-cap{position:absolute;left:12px;bottom:11px;z-index:2;font-family:var(--mono);font-size:10px;
+    line-height:15.5px;letter-spacing:1.4px;text-transform:lowercase;color:rgba(255,255,255,.58)}
+  /* real image fills its placeholder block, covering the chip + caption */
+  .ph>.fill,a.ph>.fill,.figure-img>.fill,.portrait>.fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;display:block}
+  .ph:has(>.fill)::after{z-index:1}
+  .ph:has(>img.fill[src]) .ph-cap{display:none}
+  img.fill{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;display:block}
 
-  /* ─────────── 02 · HERO ARTICLE + LATEST SIDEBAR ───────────
-     12-col grid: striped poster-frame hero (9 cols) + clean Latest sidebar (3 cols).
-     stripes are exclusive to the hero (Cannes affiche / Saul Bass reference). */
-  .hero-row{padding:32px 16px 48px;display:grid;grid-template-columns:1fr;gap:32px}
-  .hero{padding:0}
-  .hero-frame{
-    position:relative;
-    background:var(--frame-stripes);
-    padding:24px;
-    border:0;
-    overflow:hidden;
-  }
-  /* solid white panel — no border radius, hosts the image + text card.
-     mobile: stacks vertically. desktop: side-by-side with matched heights. */
-  .hero-inner{
-    position:relative;
-    background:#fff;
-    display:flex;flex-direction:column;
-    gap:0;
-  }
-  /* hero image — 15:16 near-square portrait */
-  .hero-stage{
-    position:relative;width:100%;aspect-ratio:15/16;
-    background:#1A1410;overflow:hidden;
-    flex:0 0 auto;
-  }
-  .hero-img{
-    position:absolute;inset:0;
+  /* reusable kicker / byline / section-label */
+  .kicker{font-family:var(--sans);font-weight:500;font-size:12px;line-height:20px;color:var(--blue);
+    display:inline-flex;align-items:center;gap:6px}
+  .kicker .sep{width:4px;height:4px;border-radius:50%;background:var(--ink-2);display:inline-block}
+  .kicker .alt{color:var(--blue)}
+  .byline{font-family:var(--sans);font-weight:500;font-size:13px;line-height:20.15px;letter-spacing:.78px;color:var(--ink-2);
+    display:inline-flex;align-items:center}
+  .byline .d{width:5px;height:5px;border-radius:50%;background:var(--blue);display:inline-block;margin:0 1.5px;transform:translateY(-1px)}
+
+  /* section-label header: • LABEL ───── [right meta] */
+  .label-row{display:flex;align-items:center;gap:14px}
+  .label-row .dot{width:7px;height:7px;border-radius:3.5px;background:var(--blue);flex:0 0 auto}
+  .label-row .lbl{font-family:var(--sans);font-weight:500;font-size:16px;line-height:1;letter-spacing:1px;color:var(--ink);flex:0 0 auto}
+  .label-row .rule{flex:1 1 auto;height:1px;background:var(--ink);min-width:24px}
+  .label-row .meta{font-family:var(--sans);font-weight:500;font-size:14px;line-height:1;color:var(--ink);flex:0 0 auto;white-space:nowrap}
+
+  /* outline pill button — mono variant */
+  .pill{display:inline-flex;align-items:center;justify-content:center;height:48px;padding:0 26px;
+    border:1px solid var(--ink);border-radius:999px;font-family:var(--mono);font-size:11px;line-height:17px;
+    letter-spacing:1.98px;color:var(--ink);transition:background .18s,color .18s}
+  .pill:hover{background:var(--ink);color:var(--white)}
+  /* outline pill — thai variant */
+  .pill-th{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:10px 20px;
+    border:1px solid var(--ink);border-radius:999px;font-family:var(--sans);font-weight:500;font-size:14px;line-height:1;
+    color:var(--ink);transition:background .18s,color .18s}
+  .pill-th:hover{background:var(--ink);color:var(--white)}
+
+  /* ════════ 2 · TOP APP BAR ════════ */
+  .appbar{position:sticky;top:0;z-index:40;height:72px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+    padding:0 var(--gut);background:var(--white);border-bottom:1px solid var(--rule)}
+  .appbar .iconbtn{width:48px;height:48px;border-radius:24px;display:grid;place-items:center;color:var(--ink)}
+  .appbar .iconbtn:hover{background:#f4f4f4}
+  .appbar .menu{justify-self:start;flex-direction:column;gap:4px;display:flex;align-items:center;justify-content:center}
+  .appbar .menu span{width:22px;height:2px;background:var(--ink);display:block}
+  .appbar .logo{grid-column:2;justify-self:center;font-family:var(--serif);font-weight:700;font-size:30px;line-height:30px;
+    letter-spacing:-.3px;color:var(--ink);display:inline-flex;align-items:center}
+  .appbar .logo .dot{width:15px;height:15px;border-radius:7.5px;background:var(--blue);display:inline-block;margin:0 1px}
+  .appbar .search{justify-self:end}
+  .appbar .search svg{width:20px;height:20px}
+
+  /* ════════ 3 · CATEGORY NAV (desktop only) ════════ */
+  .catnav{display:flex;justify-content:center;align-items:center;gap:34px;padding:14px var(--gut);
+    background:var(--white);border-bottom:1px solid var(--rule)}
+  .catnav a{display:inline-flex;align-items:center;gap:8px;padding:6px 0;flex:0 0 auto;
+    font-family:var(--sans);font-weight:500;font-size:14px;line-height:21.7px;color:var(--ink)}
+  .catnav a .d{width:7px;height:7px;border-radius:3.5px;background:var(--ink-2);display:inline-block}
+  .catnav a:hover{color:var(--blue)}
+
+  /* ════════ 4.1 · HERO ════════ */
+  /* DESKTOP: figure left + Latest sidebar right (original layout) */
+  .hero{display:grid;grid-template-columns:1fr 254px;gap:48px;align-items:start;padding:48px var(--gut)}
+  /* A) yellow figure panel */
+  .figure{background:var(--yellow);padding:40px 36px;display:flex;gap:10px;align-items:stretch}
+  .figure-img{flex:1.4 1 0;aspect-ratio:15/16;--chip:#1a1410}
+  .figure-card{flex:1 1 0;background:var(--white);padding:42px 25px;display:flex;flex-direction:column;gap:18px;min-width:0}
+  .figure-card h1{margin:0;font-family:var(--sans);font-weight:500;font-size:20px;line-height:26px;color:var(--ink);overflow-wrap:anywhere;
+    display:-webkit-box;-webkit-line-clamp:4;line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+  .figure-card p{margin:0;font-family:var(--serif);font-weight:400;font-size:16px;line-height:24px;color:var(--ink-2);text-wrap:pretty}
+  .figure-card .byline{margin-top:auto}
+  /* B) latest — sidebar on desktop */
+  .latest{display:flex;flex-direction:column}
+  .latest .latest-head{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+  .latest .latest-head .dot{width:7px;height:7px;border-radius:3.5px;background:var(--blue);flex:0 0 auto}
+  .latest .latest-head .lbl{font-family:var(--sans);font-weight:500;font-size:16px;line-height:1;letter-spacing:1px;color:var(--ink)}
+  .latest .latest-head .rule{flex:1 1 auto;height:1px;background:var(--ink);min-width:16px}
+  .latest .item{display:flex;flex-direction:column;gap:7px;padding:20px 0;
+    background-image:repeating-linear-gradient(to right, #c4c4c4 0 6px, transparent 6px 11px);
+    background-repeat:no-repeat;background-position:left bottom;background-size:100% 1px}
+  .latest .item h3{margin:0;font-family:var(--sans);font-weight:500;font-size:16px;line-height:22px;color:var(--ink);text-wrap:pretty}
+
+  /* ════════ 4.2 · CANNES 2026 FEATURE ROW ════════ */
+  .cannes{padding:48px var(--gut) 0}
+  .cannes .row{display:grid;grid-template-columns:268px repeat(3,1fr);gap:32px;align-items:start;margin-top:24px}
+  /* tall feature card — fixed 9:16 */
+  .cannes .feature{aspect-ratio:9/16;position:relative;--chip:#3a1a1a;box-shadow:inset 0 0 30px rgba(0,0,0,.55)}
+  .cannes .feature .ph-cap{z-index:3}
+  .cannes .feature .overlay{position:absolute;left:20px;right:20px;bottom:34px;z-index:3;
+    font-family:var(--sans);font-weight:600;font-size:20px;line-height:26px;color:#fff;text-wrap:pretty}
+  /* square cards */
+  .cannes .card{display:flex;flex-direction:column;gap:12px;min-width:0}
+  .cannes .card .sq{aspect-ratio:1/1}
+  .cannes .card .meta{display:flex;flex-direction:column;gap:7px}
+  .cannes .card .meta h3{margin:0;font-family:var(--sans);font-weight:500;font-size:18px;line-height:25px;color:var(--ink);text-wrap:pretty}
+  .cannes .card .meta .ex{margin:0;font-family:var(--serif);font-weight:400;font-size:14px;line-height:24px;color:var(--ink-2);text-wrap:pretty}
+
+  /* ════════ 4.3 · DIRECTOR FEATURE (DARK) ════════ */
+  .director-wrap{padding-top:48px}
+  /* layout (Golf): name block LEFT · portrait CENTRE · quote RIGHT */
+  .director{background:var(--dark);padding:64px var(--gut);display:flex;gap:48px;align-items:center}
+  .director .portrait{flex:0 0 363px;aspect-ratio:363/453;
+    --chip:#101010;position:relative;align-self:center}
+  .director .portrait::after{background:
+    radial-gradient(42% 34% at 50% 30%, rgba(220,200,180,.22) 0%, transparent 62%),
+    linear-gradient(180deg, rgba(0,0,0,.1) 0%, rgba(0,0,0,.75) 100%)}
+  .director .portrait .ph-cap{color:rgba(240,230,216,.45)}
+  /* middle column — quote, bottom-aligned, right text */
+  /* right column — quote, vertically centred, right-aligned */
+  .director .mid{flex:1 1 0;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;gap:18px;text-align:right;min-width:0}
+  .director .eyebrow{font-family:var(--sans);font-weight:400;font-size:12px;line-height:17px;letter-spacing:1px;
+    color:rgba(240,230,216,.65);display:inline-flex;align-items:center;gap:10px}
+  .director .eyebrow .d{width:5px;height:5px;border-radius:50%;background:rgba(240,230,216,.5);display:inline-block}
+  .director .quote{margin:0;font-family:var(--serif);font-weight:300;font-style:italic;font-size:20px;line-height:29px;
+    color:rgba(240,230,216,.92);text-wrap:pretty}
+  .director .mid .pill{height:48px;padding:0 22px;border-color:rgba(255,255,255,.85);color:var(--cream)}
+  .director .mid .pill:hover{background:var(--cream);color:var(--dark)}
+  /* left column — big name block, left-aligned */
+  .director .names{flex:1 1 0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-align:left;color:var(--cream);line-height:1;min-width:0}
+  .director .names .orig{font-family:var(--serif);font-weight:400;font-size:clamp(26px,3.4vw,36px);line-height:1.1;color:var(--cream)}
+  .director .names .en{font-family:var(--serif);font-weight:300;font-style:italic;font-size:clamp(44px,6.2vw,68px);line-height:1.04;color:var(--cream);white-space:nowrap}
+  .director .names .en.rg{font-style:normal;font-weight:400}
+  .director .names .th{font-family:var(--sans);font-weight:300;font-size:clamp(28px,4vw,40px);line-height:1.12;color:rgba(240,230,216,.85);text-align:left;white-space:nowrap}
+
+  /* ════════ 4.4 · SECTION HEADER ════════ */
+  .section-head{padding:96px var(--gut) 0}
+
+  /* ════════ 4.5 · REVIEW GRID ════════ */
+  .review{padding:32px var(--gut) 0;display:grid;grid-template-columns:repeat(3,1fr);column-gap:28px;row-gap:36px}
+  .review .card{display:flex;flex-direction:column}
+  .review .card .img{aspect-ratio:334/250}
+  .review .card .txt{padding-top:12px;display:flex;flex-direction:column;gap:5px}
+  .review .card .txt h3{margin:0;font-family:var(--serif);font-weight:500;font-size:18px;line-height:24px;color:var(--ink);text-wrap:pretty}
+  .review .card .txt .byline{font-size:14px}
+
+  /* ════════ 4.6 · MORE BUTTON ROW ════════ */
+  .more-row{padding:48px var(--gut) 0;display:flex;justify-content:center}
+
+  /* ════════ 4.7 · MUSIC FEATURE ════════ */
+  .music{padding:96px var(--gut) 0;display:flex;align-items:center;gap:0}
+  .music .mcol{flex:0 0 159px;display:flex;flex-direction:column;gap:24px}
+  .music .mcol.left{padding-right:24px}
+  .music .mcol.right{padding-left:24px}
+  .music .mcol.left .label-row{flex-wrap:wrap}
+  .music .mcol .snip{margin:0;font-family:var(--sans);font-weight:500;font-size:14px;line-height:21px;color:var(--ink);text-wrap:pretty}
+  .music .mcol .pill-th{align-self:flex-start}
+  .music .banner{flex:1 1 auto;aspect-ratio:744/261;position:relative;overflow:hidden;
     background:
-      radial-gradient(60% 50% at 35% 35%, rgba(220,180,130,.45) 0%, transparent 65%),
-      linear-gradient(180deg, rgba(26,20,16,.15) 0%, rgba(26,20,16,.85) 100%),
-      repeating-linear-gradient(45deg, rgba(255,255,255,.018) 0 2px, transparent 2px 6px),
-      linear-gradient(160deg, #4a2818 0%, #1A1410 100%);
-  }
-  .hero-img-label{
-    position:absolute;bottom:14px;left:14px;
-    font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
-    color:rgba(245,238,225,.6);
-  }
-  /* headline + description card — stacked block on mobile, 29:48 portrait on desktop */
-  .hero-card{
-    position:static;left:auto;right:auto;top:auto;transform:none;
-    background:#fff;border:0;border-radius:0;
-    padding:32px 24px;
-    display:flex;flex-direction:column;gap:16px;
-    box-shadow:none;
-    aspect-ratio:auto;flex:1 1 auto;
-  }
-  .hero-card .cat{
-    font-family:var(--sans);font-weight:500;font-size:13px;letter-spacing:.06em;text-transform:none;
-    color:var(--ink);display:inline-flex;align-items:center;gap:10px;margin:0;
-  }
-  .hero-card .cat .d{width:7px;height:7px;border-radius:50%;background:var(--accent)}
-  /* hero h1 — sized to fit inside the 29:48 card without overflow (golf) */
-  .hero-card h1{
-    font-family:var(--serif);font-weight:700;font-style:italic;
-    font-size:18px;line-height:1.3;letter-spacing:-.005em;
-    margin:0;color:var(--ink);text-wrap:balance;
-  }
-  .hero-card h1 em{font-style:italic;color:var(--ink);font-weight:700}
-  .hero-card .body{font-family:var(--serif);font-weight:400;font-size:16px;line-height:1.65;color:var(--ink-2);margin:0;text-wrap:pretty}
-  /* CinemaDots editorial signature — brand stamp inside the card */
-  .hero-card .stamp{
-    font-family:var(--serif);font-weight:700;font-size:32px;line-height:1;color:var(--ink);
-    margin:4px 0 0;display:inline-flex;align-items:center;letter-spacing:-.015em;
-  }
-  .hero-card .stamp .dot{width:13px;height:13px;border-radius:50%;background:var(--accent);display:inline-block;margin:0 2px;transform:translateY(-4px)}
-  /* laurel seal centered at bottom */
-  .hero-card .laurel{
-    margin:auto auto 0;display:flex;flex-direction:column;align-items:center;gap:6px;
-    opacity:.6;padding-top:16px;
-  }
-  .hero-card .laurel svg{width:120px;height:auto}
-  .hero-card .laurel .lbl{font-family:var(--mono);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-2)}
+      radial-gradient(30% 78% at 16% 52%, rgba(214,86,66,.78) 0%, transparent 64%),
+      radial-gradient(24% 60% at 37% 46%, rgba(38,78,138,.62) 0%, transparent 64%),
+      radial-gradient(22% 66% at 57% 58%, rgba(216,176,84,.6) 0%, transparent 64%),
+      radial-gradient(26% 70% at 80% 47%, rgba(48,118,88,.6) 0%, transparent 64%),
+      linear-gradient(180deg,#f0e6d2 0%,#dcc9a6 100%)}
+  .music .banner .cap{position:absolute;right:14px;bottom:13px;font-family:var(--mono);font-size:10px;
+    line-height:15px;letter-spacing:1.4px;text-transform:lowercase;color:rgba(60,40,20,.55)}
+  .music .mcol.right .ritem{display:flex;flex-direction:column;gap:8px}
+  .music .mcol.right .ritem + .ritem{padding-top:24px;border-top:1px solid var(--rule-2)}
+  .music .mcol.right .ritem h3{margin:0;font-family:var(--serif);font-weight:500;font-size:15.5px;line-height:20.9px;color:var(--ink);text-wrap:pretty}
 
-  /* ─────────── LATEST SIDEBAR ───────────
-     clean reading column — no frame, no stripes, no images. */
-  /* remove top rule (golf: "remove the line above latest") */
-  .latest-side{
-    display:flex;flex-direction:column;padding:0;background:transparent;border:0;
-    border-bottom:1px solid var(--ink);
-  }
-  .latest-side .latest-head{
-    display:flex;align-items:center;gap:14px;
-    padding:0;margin:0 0 24px;line-height:1;
-    font-family:var(--sans);font-weight:500;font-size:13px;letter-spacing:.06em;text-transform:none;color:var(--ink);
-    border:0;
-  }
-  .latest-side .latest-head::before{
-    content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);flex:0 0 auto;
-  }
-  .latest-side .latest-head .d{display:none}
-  .latest-side .latest-head::after{
-    content:"";flex:1;height:1px;background:var(--ink);min-width:24px;
-  }
-  .latest-side .latest-list{display:flex;flex-direction:column;gap:0}
-  .latest-side .latest-item{
-    display:flex;flex-direction:column;gap:8px;
-    padding:20px 0;
-    border:0;border-bottom:1px dashed var(--rule-dashed);
-  }
-  .latest-side .latest-item:last-child{border-bottom:0;padding-bottom:20px}
-  .latest-side .latest-cat{
-    font-family:var(--sans);font-weight:500;font-size:13px;letter-spacing:.06em;text-transform:none;
-    color:var(--ink);display:inline-flex;align-items:center;gap:10px;margin:0;
-  }
-  .latest-side .latest-cat .d{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent)}
-  .latest-side .latest-cat .latest-num,
-  .latest-side .latest-cat .sub,
-  .latest-side .latest-cat .line,
-  .latest-side .latest-cat .lbl{display:inline-flex}
-  .latest-side .latest-cat .latest-num{display:none}
-  .latest-side .latest-cat .sub{color:var(--mute);font-weight:400}
-  .latest-side .latest-cat .line{display:none}
-  .latest-side .latest-ti{
-    font-family:var(--sans);font-weight:500;font-size:15px;line-height:1.45;color:var(--ink);margin:0;text-wrap:pretty;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-  }
-  .latest-side .latest-by{
-    font-family:var(--sans);font-weight:600;font-size:14px;letter-spacing:-.005em;color:var(--ink-3);
-    margin:0;display:inline-flex;align-items:center;text-transform:none;
-  }
-  .latest-side .latest-by em{font-style:normal;color:inherit;font-family:inherit;font-size:inherit;font-weight:inherit;letter-spacing:inherit;margin:0;text-transform:none}
-  .latest-side .latest-by .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;margin:0 2px;transform:translateY(-2px)}
+  /* ════════ 4.8 · THREE-COLUMN SECTION ════════ */
+  .triple{padding:96px var(--gut) 0;display:flex;gap:36px}
+  .triple .tcol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:18px}
+  .triple .tcol .lead{aspect-ratio:330/248}
+  .triple .tcol .litem{padding:18px 0;display:flex;flex-direction:column;gap:8px;
+    background-image:repeating-linear-gradient(to right, #c4c4c4 0 6px, transparent 6px 11px);
+    background-repeat:no-repeat;background-position:left bottom;background-size:100% 1px}
+  .triple .tcol .litem h3{margin:0;font-family:var(--sans);font-weight:500;font-size:16px;line-height:22px;color:var(--ink);text-wrap:pretty}
+  .triple .tcol .pill{align-self:center;margin-top:4px}
 
-  /* ─────────── 03 · LATEST — 1 featured + 3 standard cards ───────────
-     no card backgrounds, borders, radius, or shadows anywhere in this section. */
-  .latest-section{padding:40px 16px 0}
-  .latest-rail{
-    display:flex;align-items:center;gap:14px;
-    font-family:var(--sans);font-weight:500;font-size:13px;letter-spacing:.06em;text-transform:none;color:var(--ink);
-    margin:0 0 24px;line-height:1;
-  }
-  .latest-rail .d{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:0 0 auto}
-  .latest-rail .line{flex:1;height:1px;background:var(--ink);min-width:24px}
-  .latest-grid{
-    display:grid;grid-template-columns:1fr;gap:32px;
-  }
-  .lcard{display:flex;flex-direction:column;gap:0;background:transparent;border:0;border-radius:0;box-shadow:none}
-  .lcard .img{position:relative;width:100%;overflow:hidden;background:#1a1a1a}
-  .lcard .img .ph{
-    position:absolute;inset:0;
-    background:
-      radial-gradient(60% 50% at 40% 40%, rgba(220,180,130,.35) 0%, transparent 65%),
-      linear-gradient(180deg, rgba(0,0,0,.05) 50%, rgba(0,0,0,.55) 100%),
-      var(--p-bg, #1c1c1c);
-  }
-  .lcard .img .ph-label{position:absolute;bottom:12px;left:14px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+  /* ════════ 5 · FOOTER ════════ */
+  .footer-wrap{padding-top:96px}
+  .footer{background:var(--dark);color:var(--cream-2);padding:64px var(--gut) 28px}
+  .footer .cols{display:flex;flex-wrap:wrap;gap:30px 24px}
+  .footer .brand{flex:0 0 280px;display:flex;flex-direction:column;gap:16px}
+  .footer .brand .logo{font-family:var(--serif);font-weight:700;font-size:30px;line-height:30px;letter-spacing:-.3px;color:var(--cream);display:inline-flex;align-items:center}
+  .footer .brand .logo .dot{width:13px;height:13px;border-radius:6.5px;background:var(--blue);display:inline-block;margin:0 1px}
+  .footer .brand .quote{margin:0;font-family:var(--serif);font-style:italic;font-weight:400;font-size:20px;line-height:28px;color:rgba(240,230,216,.95);text-wrap:pretty;max-width:30ch}
+  .footer .brand .wordmark{display:flex;align-items:center;gap:12px;font-family:var(--sans);font-weight:400;font-size:10px;line-height:18px;letter-spacing:2px;color:rgba(240,230,216,.55)}
+  .footer .brand .wordmark::before{content:"";width:22px;height:1px;background:rgba(240,230,216,.4)}
+  .footer .brand .socials{display:flex;gap:10px}
+  .footer .brand .socials a{width:38px;height:38px;border:1px solid rgba(255,255,255,.4);border-radius:19px;display:grid;place-items:center;color:var(--cream-2)}
+  .footer .brand .socials a:hover{background:var(--cream);color:var(--dark)}
+  .footer .brand .socials svg{width:15px;height:15px}
+  .footer .lcol{flex:1 1 126px;min-width:110px;display:flex;flex-direction:column}
+  .footer .lcol h6{margin:0 0 18px;display:flex;align-items:center;gap:10px;font-family:var(--sans);font-weight:400;font-size:14px;line-height:18.6px;letter-spacing:1px;color:var(--cream)}
+  .footer .lcol h6 .d{width:6px;height:6px;border-radius:50%;background:var(--ink-2);display:inline-block}
+  .footer .lcol ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px}
+  .footer .lcol li a{font-family:var(--serif);font-weight:400;font-size:14px;line-height:20px;color:rgba(240,230,216,.8)}
+  .footer .lcol li a:hover{color:var(--cream)}
+  .footer .legal{margin-top:48px;padding-top:20px;border-top:1px solid rgba(255,255,255,.12);
+    display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+    font-family:var(--sans);font-weight:400;font-size:10px;line-height:1.4;color:rgba(240,230,216,.45)}
+  .footer .legal .rt{display:flex;gap:14px;color:rgba(240,230,216,.65)}
+  .footer .legal .rt .sep{opacity:.5}
 
-  /* featured (card 1) — 3:5 portrait, text overlays the image, no scrim */
-  .lcard.feature .img{aspect-ratio:3/5}
-  .lcard.feature .overlay{
-    position:absolute;inset:0;z-index:2;
-    padding:24px;display:flex;flex-direction:column;gap:8px;justify-content:flex-end;
-  }
-  .lcard.feature .overlay .kicker{
-    font-family:var(--sans);font-weight:500;font-size:13px;letter-spacing:.06em;text-transform:none;
-    color:var(--ink);display:inline-flex;align-items:center;gap:10px;align-self:flex-start;
-    background:#fff;padding:6px 12px;
-  }
-  .lcard.feature .overlay .kicker .d{width:6px;height:6px;border-radius:50%;background:var(--accent)}
-  .lcard.feature .overlay .ti{
-    font-family:var(--sans);font-weight:500;font-size:18px;line-height:1.4;
-    color:#fff;margin:8px 0 0;text-wrap:pretty;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-  }
-  .lcard.feature .overlay .by{
-    font-family:var(--sans);font-weight:600;font-size:20px;letter-spacing:-.01em;
-    color:#fff;margin:6px 0 0;display:inline-flex;align-items:center;
-  }
-  .lcard.feature .overlay .by .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);display:inline-block;margin:0 2px;transform:translateY(-2px)}
-  /* light-image variant: text adapts to ink, kicker chip uses ink on white */
-  .lcard.feature.light .overlay .ti{color:var(--ink)}
-  .lcard.feature.light .overlay .by{color:var(--ink)}
-
-  /* standard (cards 2-4) — square image on top + text stack below */
-  .lcard.standard .img{aspect-ratio:1/1}
-  .lcard.standard .meta{padding:16px 0 0;display:flex;flex-direction:column;gap:0}
-  .lcard.standard .kicker{
-    font-family:var(--sans);font-weight:500;font-size:13px;letter-spacing:.06em;text-transform:none;
-    color:var(--ink);display:inline-flex;align-items:center;gap:10px;
-  }
-  .lcard.standard .kicker .d{width:6px;height:6px;border-radius:50%;background:var(--accent)}
-  .lcard.standard .ti{
-    font-family:var(--sans);font-weight:500;font-size:18px;line-height:1.4;color:var(--ink);
-    margin:8px 0 0;text-wrap:pretty;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-  }
-  .lcard.standard .by{
-    font-family:var(--sans);font-weight:600;font-size:20px;letter-spacing:-.01em;color:var(--ink-3);
-    margin:16px 0 0;display:inline-flex;align-items:center;
-  }
-  .lcard.standard .by .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);display:inline-block;margin:0 2px;transform:translateY(-2px)}
-
-  /* graphic image-treatment: solid colour + bitmap title + cutout portrait */
-  .lcard .img.graphic{position:relative;background:var(--g-bg, #2A9D9F)}
-  .lcard .img.graphic .ph{display:none}
-  .lcard .img.graphic .gx-title{
-    position:absolute;left:14px;top:14px;right:14px;
-    font-family:'Courier New', var(--mono);font-weight:700;font-size:28px;line-height:.95;
-    color:var(--g-ink, #FFFCF5);text-transform:uppercase;letter-spacing:.02em;
-    /* pixelated bitmap feel via text-shadow stair-step */
-    text-shadow:1px 0 0 currentColor, 0 1px 0 currentColor, 1px 1px 0 currentColor;
-    image-rendering:pixelated;
-  }
-  .lcard .img.graphic .gx-portrait{
-    position:absolute;left:50%;bottom:0;width:74%;aspect-ratio:3/4;transform:translateX(-50%);
-    background:
-      radial-gradient(40% 30% at 50% 30%, rgba(255,220,190,.85) 0%, transparent 65%),
-      radial-gradient(35% 50% at 50% 60%, rgba(80,40,30,.85) 0%, transparent 80%),
-      linear-gradient(180deg, transparent 0%, rgba(0,0,0,.4) 100%);
-  }
-  .g-teal{--g-bg:#2A9D9F;--g-ink:#FFFCF5}
-  .g-red{--g-bg:#E63946;--g-ink:#FFFCF5}
-  .g-mustard{--g-bg:#E2B43A;--g-ink:#1A1410}
-
-  /* ─────────── 03 · POSTERS STRIP ─────────── */
-  .posters{margin-top:48px;padding:0 16px;display:grid;grid-template-columns:1fr;gap:24px;border-top:0;border-bottom:0}
-  .poster-cell{padding:0;border:1px solid var(--ink);display:flex;flex-direction:column;background:var(--bg)}
-  .poster-cat{
-    font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);
-    display:inline-flex;align-items:center;gap:0;flex-wrap:wrap;
-  }
-  .poster-cat .d{display:none}
-  .poster-tag{color:var(--mute);font-size:10px;letter-spacing:.12em;text-transform:uppercase}
-  .poster-tag::before{content:"•";margin:0 8px;color:var(--mute);font-size:11px}
-  .poster-by{font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);margin-top:auto;padding-top:8px;display:inline-flex;align-items:baseline}
-  .poster-by em{font-style:italic;color:var(--ink-2);font-family:var(--serif);font-size:13px;font-weight:500;letter-spacing:0;margin-left:6px;text-transform:none}
-  .poster-img{position:relative;width:100%;aspect-ratio:1/1.18;overflow:hidden;background:#0F0E0E}
-  .poster-img .ph{
-    position:absolute;inset:0;
-    background:linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.4)),
-               repeating-linear-gradient(45deg, rgba(255,255,255,.04) 0 2px, transparent 2px 6px),
-               var(--p-bg, #1c1c1c);
-  }
-  .poster-label{
-    position:absolute;left:18px;top:18px;right:18px;
-    color:#F0E6D8;font-family:var(--serif);font-weight:800;font-size:30px;line-height:.95;text-transform:uppercase;letter-spacing:-.01em;
-  }
-  .poster-label small{display:block;font-size:11px;font-weight:500;letter-spacing:.06em;margin-top:6px;color:rgba(240,230,216,.7);text-transform:none}
-  /* collage cell (first) */
-  .poster-collage{position:relative;width:100%;height:100%}
-  .collage .tile{position:absolute;background-size:cover}
-  .poster-body{padding:14px 18px 20px;display:flex;flex-direction:column;gap:6px}
-  .poster-cat{
-    font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);
-    display:inline-flex;align-items:center;gap:6px;
-  }
-  .poster-cat .d{width:5px;height:5px;border-radius:50%;background:var(--accent)}
-  .poster-ti{font-family:var(--serif);font-weight:600;font-size:15px;line-height:1.35;color:var(--ink);text-wrap:pretty;margin:0}
-
-  /* ─────────── 04 · CAILEE BLACK SECTION ─────────── */
-  .profile{background:var(--night);color:#F0EAE0;padding:48px 24px 56px;margin-top:0;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);display:flex;flex-direction:column;gap:28px}
-  .profile-name{
-    font-family:var(--serif);font-weight:300;color:#F0EAE0;line-height:.95;letter-spacing:-.02em;margin:0;
-    display:flex;flex-direction:column;gap:0;
-  }
-  .profile-name .en{font-size:64px;font-weight:400}
-  .profile-name .th{font-family:var(--sans);font-size:34px;font-weight:300;margin-top:4px;color:rgba(240,234,224,.85)}
-  .profile-name .en.two{margin-top:6px}
-  .profile-portrait{
-    position:relative;width:100%;aspect-ratio:4/5;
-    background:#000;overflow:hidden;border:1px solid rgba(255,255,255,.06);
-  }
-  .profile-portrait .scene{
-    position:absolute;inset:0;
-    background:
-      radial-gradient(40% 30% at 50% 30%, rgba(220,200,180,.35) 0%, transparent 60%),
-      radial-gradient(30% 40% at 50% 35%, rgba(60,40,30,.7) 0%, transparent 80%),
-      linear-gradient(180deg, #0a0a0a 0%, #000 100%);
-  }
-  .profile-portrait .ph-label{position:absolute;bottom:14px;left:14px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(240,234,224,.45)}
-  .profile-side{display:flex;flex-direction:column;gap:18px}
-  .profile-role{
-    font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,234,224,.65);
-  }
-  .profile-body{font-family:var(--serif);font-style:italic;font-weight:300;font-size:18px;line-height:1.45;color:rgba(240,234,224,.92);margin:0;text-wrap:pretty}
-  .profile-cta{
-    align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;gap:10px;
-    min-height:48px;padding:0 22px;border:1px solid rgba(255,255,255,.5);color:#F0EAE0;
-    font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
-  }
-  .profile-cta:hover{background:#F0EAE0;color:var(--night)}
-
-  /* ─────────── unified section title (cat-rule) ───────────
-     pattern: • label ────────── [optional right text]
-     applied to: section-head, pillar-head, latest-side .latest-head, latest-rail. */
-  .section-head{
-    display:flex;align-items:center;gap:14px;
-    margin:64px 20px 28px;
-    padding:0;
-  }
-  .section-head .tag{
-    background:transparent;color:var(--ink);padding:0;
-    font-family:var(--sans);font-weight:500;font-size:13px;line-height:1;
-    letter-spacing:.06em;text-transform:none;
-    display:inline-flex;align-items:center;gap:10px;flex:0 0 auto;
-  }
-  .section-head .tag .d{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:0 0 auto}
-  .section-head .line{flex:1;height:1px;background:var(--ink);min-width:24px}
-  .section-head .meta{
-    font-family:var(--sans);font-weight:400;font-size:12px;color:var(--ink);
-    letter-spacing:.04em;flex:0 0 auto;
+  /* ═══════════════════ TABLET (≤1023px) ═══════════════════ */
+  @media (max-width:1023px){
+    :root{--gut:28px}
+    /* category nav hidden on tablet/mobile — lives in hamburger */
+    .catnav{display:none}
+    /* hero: figure full-bleed edge-to-edge (no padding), latest below with gutters */
+    .hero{display:block;padding:0}
+    .latest{display:grid;grid-template-columns:1fr 1fr;column-gap:32px;row-gap:0;padding:48px var(--gut) 0}
+    .latest .latest-head{grid-column:1 / -1}
+    /* cannes: 2 columns, feature spans full width on its own row */
+    .cannes .row{grid-template-columns:1fr 1fr;gap:24px}
+    .cannes .feature{grid-column:1 / -1;height:auto;aspect-ratio:16/7}
+    .cannes .feature .overlay{font-size:24px;line-height:30px;max-width:60%}
+    /* director: name + portrait side by side, quote spans below */
+    .director{flex-wrap:wrap;gap:32px;padding:56px var(--gut)}
+    .director .names{flex:1 1 280px;justify-content:center;align-items:flex-start;text-align:left}
+    .director .portrait{flex:0 0 300px;max-width:45%}
+    .director .mid{flex:1 1 100%;justify-content:flex-start;align-items:flex-start;text-align:left}
+    .director .mid .quote{text-align:left}
+    /* review grid: 2 columns */
+    .review{grid-template-columns:1fr 1fr;column-gap:24px;row-gap:32px}
+    /* music: stack */
+    .music{flex-direction:column;align-items:stretch;gap:32px;padding-top:80px}
+    .music .mcol{flex:1 1 auto}
+    .music .mcol.left,.music .mcol.right{padding:0}
+    .music .mcol.right{flex-direction:row;gap:24px}
+    .music .mcol.right .ritem{flex:1 1 0}
+    .music .mcol.right .ritem + .ritem{padding-top:0;border-top:0;border-left:1px solid var(--rule-2);padding-left:24px}
+    /* triple: keep 3 columns, tighter */
+    .triple{gap:24px;padding-top:80px}
+    /* footer: brand full width, columns wrap below */
+    .footer .brand{flex:1 1 100%}
   }
 
-  .film-grid{padding:0 20px;display:grid;grid-template-columns:1fr;gap:36px}
-  .film-card{display:flex;flex-direction:column;gap:0}
-  .film-img{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;background:#1a1a1a;border:1px solid var(--ink)}
-  .film-img .ph{
-    position:absolute;inset:0;
-    background:linear-gradient(180deg, rgba(0,0,0,.0) 60%, rgba(0,0,0,.4) 100%),
-               repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 2px, transparent 2px 6px),
-               var(--p-bg, #1c1c1c);
-  }
-  .film-img .ph-label{position:absolute;bottom:12px;left:14px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6)}
-  .film-meta{padding:12px 0 0;display:flex;flex-direction:column;gap:6px}
-  .film-cat{font-family:var(--sans);font-weight:500;font-size:13px;letter-spacing:.06em;text-transform:none;color:var(--ink);display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .film-cat .d{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent)}
-  .film-tag{color:var(--mute);font-size:10px;letter-spacing:.12em;text-transform:uppercase}
-  .film-tag::before{content:"•";margin:0 8px;color:var(--mute);font-size:11px}
-  .film-ti{font-family:var(--serif);font-weight:500;font-size:16px;line-height:1.35;color:var(--ink);margin:0;text-wrap:pretty}
-  /* unified CinemaDots byline stamp for film cards */
-  .film-by{
-    font-family:var(--sans);font-weight:600;font-size:16px;letter-spacing:-.005em;color:var(--ink-3);
-    margin-top:6px;display:inline-flex;align-items:center;text-transform:none;
-  }
-  .film-by .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;margin:0 2px;transform:translateY(-2px)}
-
-  .more-row{display:flex;justify-content:center;padding:32px 20px 0}
-  .more-btn{
-    display:inline-flex;align-items:center;justify-content:center;gap:14px;
-    min-height:48px;padding:0 26px;
-    border:1px solid var(--ink);color:var(--ink);
-    font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;
-  }
-  .more-btn:active{background:var(--ink);color:var(--bg)}
-
-  /* ─────────── 06 · MUSIC — 15/70/15 triptych ───────────
-     gallery-wall proportions — artwork is the subject, rails are labels. */
-  .music{
-    margin:0;padding:96px 16px;
-    background:#fff;border:0;
-    display:grid;grid-template-columns:1fr;gap:48px;
-  }
-  /* left rail */
-  .music-left{
-    display:flex;flex-direction:column;gap:24px;border:0;padding:0;background:transparent;
-  }
-  .music-tag{
-    align-self:flex-start;background:var(--pill-bg);color:var(--pill-ink);
-    padding:12px 24px;font-family:var(--sans);font-weight:500;font-size:16px;
-    border-radius:999px;letter-spacing:0;text-transform:none;
-    display:inline-flex;align-items:center;gap:0;
-  }
-  .music-tag .d{display:none}
-  /* article snippet — title only, no image, no kicker */
-  .music-snippet{
-    font-family:var(--sans);font-weight:500;font-size:14px;line-height:1.5;color:var(--ink);
-    margin:0;text-wrap:pretty;
-    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
-  }
-  .music-cta{
-    align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;gap:10px;
-    min-height:0;padding:10px 20px;border:1px solid var(--ink);background:transparent;
-    font-family:var(--sans);font-weight:500;font-size:14px;letter-spacing:0;text-transform:none;
-    color:var(--ink);border-radius:0;
-    margin-top:8px;
-  }
-  /* center banner — 4:1 letterbox, commissioned illustration only */
-  .music-mid{
-    display:block;padding:0;background:transparent;aspect-ratio:4/1;
-    position:relative;width:100%;overflow:hidden;
-    border:0;
-  }
-  .music-mid-inner{display:none}
-  .music-mid .art{
-    position:absolute;inset:0;
-    /* painterly illustration placeholder — layered radial paint blobs */
-    background:
-      radial-gradient(28% 70% at 18% 50%, rgba(220,90,70,.7) 0%, transparent 65%),
-      radial-gradient(22% 55% at 38% 48%, rgba(40,80,140,.55) 0%, transparent 65%),
-      radial-gradient(20% 60% at 58% 56%, rgba(220,180,90,.55) 0%, transparent 65%),
-      radial-gradient(24% 65% at 80% 48%, rgba(50,120,90,.55) 0%, transparent 65%),
-      linear-gradient(180deg, #F0E6D2 0%, #DCC9A6 100%);
-  }
-  .music-mid .art-tag{
-    position:absolute;bottom:14px;right:14px;
-    font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(60,40,20,.55);
-  }
-  /* right rail */
-  .music-right{
-    display:flex;flex-direction:column;gap:24px;border:0;padding:0;background:transparent;
-  }
-  .music-side{
-    padding:0;border:0;display:flex;flex-direction:column;gap:12px;
-  }
-  .music-side + .music-side{
-    padding-top:24px;border-top:1px dashed var(--rule-dashed);
-  }
-  .music-side .ti{
-    font-family:var(--sans);font-weight:500;font-size:14px;line-height:1.5;color:var(--ink);
-    margin:0;text-wrap:pretty;font-style:normal;
-    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
-  }
-  .music-side .by{
-    font-family:var(--sans);font-weight:700;font-size:20px;letter-spacing:-.01em;color:var(--ink-3);
-    margin:0;display:inline-flex;align-items:center;
-  }
-  .music-side .by em{font-style:normal;color:inherit;font-family:inherit;font-size:inherit;font-weight:inherit;letter-spacing:inherit;margin:0;text-transform:none}
-  .music-side .by .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);display:inline-block;margin:0 2px;transform:translateY(-2px)}
-
-  /* ─────────── 07 · PILLARS (3-col on desktop) ─────────── */
-  /* default: stacked single-column on mobile */
-  .pillars{padding:0 20px;margin-top:64px;display:flex;flex-direction:column;gap:48px}
-  .pillar{display:flex;flex-direction:column;gap:18px}
-  /* pillar-head adopts the same cat-rule pattern */
-  .pillar-head{display:flex;align-items:center;gap:14px;padding:0;border:0;margin:0 0 4px}
-  .pillar-head .tag{
-    background:transparent;color:var(--ink);padding:0;
-    font-family:var(--sans);font-weight:500;font-size:13px;line-height:1;letter-spacing:.06em;text-transform:none;
-    display:inline-flex;align-items:center;gap:10px;flex:0 0 auto;
-  }
-  .pillar-head .tag .d{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:0 0 auto}
-  .pillar-head .line{display:block;flex:1;height:1px;background:var(--ink);min-width:24px}
-  /* unified accent dot for every pillar */
-  .pillar.people .pillar-head .tag .d,
-  .pillar.book .pillar-head .tag .d,
-  .pillar.history .pillar-head .tag .d{background:var(--accent)}
-  .pillar-img{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#1a1a1a;border:1px solid var(--ink)}
-  .pillar-img .ph{position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,.0) 50%, rgba(0,0,0,.5) 100%),repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 2px, transparent 2px 6px),var(--p-bg, #1c1c1c)}
-  .pillar-img .ph-label{position:absolute;bottom:12px;left:14px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6)}
-  .pillar-list{counter-reset:pi;display:flex;flex-direction:column;border-top:0}
-  .pillar-item{counter-increment:pi;padding:18px 0;border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:6px;min-height:64px}
-  .pillar-item:last-child{border-bottom:0}
-  .pillar-item .meta{
-    font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);
-    display:inline-flex;align-items:center;gap:10px;
-  }
-  .pillar-item .meta .num{display:none}
-  .pillar-item .meta .tag{color:var(--accent)}
-  .pillar-item .ti{font-family:var(--serif);font-size:15.5px;line-height:1.4;color:var(--ink);margin:0;text-wrap:pretty}
-  /* unified CinemaDots byline stamp (golf: apply to all touchpoints) */
-  .pillar-item .by{
-    font-family:var(--sans);font-weight:600;font-size:14px;letter-spacing:-.005em;color:var(--ink-3);
-    margin-top:4px;display:inline-flex;align-items:center;text-transform:none;
-  }
-  .pillar-item .by .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block;margin:0 2px;transform:translateY(-2px)}
-  .pillar-more{display:flex;justify-content:center;margin-top:8px}
-
-  /* ─────────── 08 · FOOTER ─────────── */
-  footer.colophon{
-    margin-top:64px;padding:48px 20px 36px;
-    background:var(--night);color:#D7D2C8;
-    display:flex;flex-direction:column;gap:48px;
-  }
-  .ft-brand{display:flex;flex-direction:column;gap:16px;margin-bottom:8px}
-  .ft-brand .brand{color:#F0E6D8;font-size:30px;justify-content:flex-start}
-  .ft-brand .brand .dot{background:var(--accent)}
-  .ft-quote{font-family:var(--serif);font-style:italic;font-size:20px;line-height:1.4;color:rgba(215,210,200,.95);margin:18px 0 0;max-width:32ch;text-wrap:balance}
-  .ft-quote em{color:#A8B0FF;font-style:italic;font-weight:500}
-  .ft-quote-name{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(215,210,200,.55);margin-top:14px;display:inline-flex;align-items:center;gap:12px}
-  .ft-quote-name::before{content:"";width:22px;height:1px;background:rgba(215,210,200,.4)}
-  .ft-socials{display:flex;gap:10px}
-  .ft-socials a{width:38px;height:38px;border:1px solid rgba(255,255,255,.18);border-radius:50%;display:grid;place-items:center;color:#D7D2C8}
-  .ft-socials a:hover{background:#F0E6D8;color:var(--night)}
-  .ft-socials svg{width:15px;height:15px}
-  .ft-contact{display:flex;flex-direction:column;gap:6px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(215,210,200,.55)}
-  .ft-contact .lbl{color:rgba(215,210,200,.65)}
-  .ft-contact .email{
-    color:#F0E6D8;font-size:14px;letter-spacing:.04em;font-family:var(--sans);text-transform:none;
-    padding:2px 0 6px;border-bottom:2px dotted var(--accent);align-self:flex-start;
-  }
-  .ft-cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding-top:24px;border-top:1px solid rgba(255,255,255,.12)}
-  .ft-col h6{
-    background:transparent;border:0;padding:0;
-    font-family:var(--mono);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#F0E6D8;
-    margin:0 0 22px;display:inline-flex;align-items:center;gap:10px;width:auto;
-  }
-  .ft-col h6 .d{width:7px;height:7px;border-radius:50%}
-  .ft-col h6.films .d{background:var(--accent)}
-  .ft-col h6.people .d{background:#D86A4A}
-  .ft-col h6.music .d{background:#1F8A5B}
-  .ft-col h6.book .d{background:#C9A227}
-  .ft-col h6.history .d{background:#7A5BD6}
-  .ft-col ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:18px}
-  .ft-col li{font-family:var(--serif);font-size:15px;line-height:1.35;color:rgba(215,210,200,.8);padding:0;border-bottom:0}
-  .ft-col li a{display:inline-block;color:inherit;transition:color .15s}
-  .ft-col li a:hover{color:#F0E6D8}
-  .ft-bottom{margin-top:48px;padding-top:24px;border-top:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;gap:10px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(215,210,200,.45)}
-  .ft-bottom .rt{display:flex;gap:24px;flex-wrap:wrap}
-  .ft-bottom a{color:rgba(215,210,200,.65);text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
-  .ft-bottom a:hover{color:#F0E6D8}
-
-  /* ─────────── Hamburger overlay ─────────── */
-  .menu-panel{position:fixed;inset:0;z-index:60;background:#fff;transform:translateY(-100%);transition:transform .35s cubic-bezier(.6,0,.2,1);display:flex;flex-direction:column}
-  .menu-panel.open{transform:translateY(0)}
-  .menu-top{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;height:60px;padding:0 12px;border-bottom:1px solid var(--ink)}
-  .menu-close{width:48px;height:48px;display:grid;place-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
-  .menu-list{padding:24px 20px;display:flex;flex-direction:column;flex:1;overflow-y:auto}
-  .menu-list a{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--rule);font-family:var(--serif);font-size:22px;font-weight:500;color:var(--ink);min-height:48px}
-  .menu-list a .d{width:8px;height:8px;border-radius:50%;background:var(--accent)}
-  .menu-foot{padding:18px 20px 24px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);display:flex;justify-content:space-between}
-
-  /* ─────────── reusable category rule ───────────
-     pattern from figma: • label ────────── right-text */
-  .cat-rule{
-    display:flex;align-items:center;gap:14px;
-    font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);
-    line-height:1;
-  }
-  .cat-rule .d{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:0 0 auto}
-  .cat-rule .lbl{color:var(--ink);font-weight:500;white-space:nowrap}
-  .cat-rule .sub{color:var(--mute);font-weight:400;letter-spacing:.12em}
-  .cat-rule .line{flex:1;height:1px;background:var(--ink);min-width:24px}
-  .cat-rule .date{color:var(--ink);font-weight:400;white-space:nowrap;letter-spacing:.08em;font-size:11px}
-  .cat-rule.dark{color:#F0E6D8}
-  .cat-rule.dark .lbl{color:#F0E6D8}
-  .cat-rule.dark .line{background:rgba(240,230,216,.55)}
-  .cat-rule.dark .date{color:rgba(240,230,216,.7)}
-
-  /* hero-rule sits above the hero+latest grid, runs across both columns */
-  .hero-rule{grid-column:1 / -1;margin:20px 16px 12px;padding:0}
-
-  /* latest-rule sits at top of right column */
-  .latest-rule{padding:0;margin-bottom:6px}
-  .latest-rule .lbl{font-size:12px;letter-spacing:.22em}
-
-  /* category rule inside each latest item replaces the old chip/middot layout */
-  .latest-cat.cat-rule{gap:10px;font-size:10.5px;letter-spacing:.14em;align-items:center}
-  .latest-cat.cat-rule .latest-num{font-family:var(--mono);color:var(--ink);letter-spacing:.04em;font-size:10.5px;flex:0 0 auto;margin-right:0}
-  .latest-cat.cat-rule .latest-num::before{content:counter(lat, decimal-leading-zero)}
-  .latest-cat.cat-rule .d{width:6px;height:6px}
-  .latest-cat.cat-rule .lbl{font-weight:500}
-  .latest-cat.cat-rule .sub{color:var(--mute)}
-  .latest-cat.cat-rule .line{background:var(--rule-2);min-width:16px}
-
-  /* poster collage overlay (per golf) */
-  .poster-collage{position:relative}
-  .collage-overlay{
-    position:absolute;inset:0;
-    padding:18px 18px 16px;
-    display:flex;flex-direction:column;justify-content:space-between;gap:12px;
-    color:#F7F2E8;
-    background:linear-gradient(180deg, rgba(8,6,6,.18) 0%, rgba(8,6,6,.55) 100%);
-    z-index:2;
-  }
-  .collage-overlay .co-tag{
-    font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;
-    color:#F7F2E8;display:inline-flex;align-items:center;gap:8px;align-self:flex-start;
-  }
-  .collage-overlay .co-tag .d{width:6px;height:6px;border-radius:50%;background:#FFD66B}
-  .collage-overlay .co-ti{
-    font-family:var(--sans);font-weight:600;font-size:24px;line-height:1.05;letter-spacing:-.01em;
-    margin:auto 0 0;color:#FFFCF5;text-wrap:balance;
-  }
-  .collage-overlay .co-meta{
-    font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
-    color:rgba(247,242,232,.7);
+  /* ═══════════════════ MOBILE (≤640px) ═══════════════════ */
+  @media (max-width:640px){
+    :root{--gut:18px}
+    .appbar{padding:0 12px}
+    .appbar .logo{font-size:24px;line-height:24px}
+    .appbar .logo .dot{width:12px;height:12px}
+    /* category nav hidden on tablet/mobile — lives in hamburger */
+    .catnav{display:none}
+    /* hero figure full-bleed (no padding); image stacks over card */
+    .hero{padding:0}
+    .figure{flex-direction:column;padding:18px}
+    .figure-img{flex:none;width:100%;aspect-ratio:1/1}
+    .figure-card{flex:none;width:100%;padding:24px 20px;gap:14px}
+    .latest{grid-template-columns:1fr;padding:40px var(--gut) 0}
+    /* cannes single column */
+    .cannes{padding-top:40px}
+    .cannes .row{grid-template-columns:1fr;gap:28px}
+    .cannes .feature{aspect-ratio:9/16}
+    .cannes .feature .overlay{font-size:22px;line-height:28px;max-width:80%}
+    .cannes .card .sq{aspect-ratio:16/10}
+    /* director full stack: name, portrait, quote */
+    .director-wrap{padding-top:40px}
+    .director{flex-direction:column;gap:28px;padding:44px var(--gut)}
+    .director .names{flex:none;width:100%;align-items:flex-start;text-align:left}
+    .director .names .th{text-align:left}
+    .director .portrait{flex:none;width:100%;max-width:none}
+    .director .mid{flex:none;width:100%;align-items:flex-start;text-align:left}
+    /* section header */
+    .section-head{padding-top:72px}
+    /* review single column */
+    .review{grid-template-columns:1fr;row-gap:32px}
+    .more-row{padding-top:40px}
+    /* music: items stack vertically again */
+    .music{padding-top:72px}
+    .music .mcol.right{flex-direction:column;gap:0}
+    .music .mcol.right .ritem + .ritem{padding-top:24px;border-top:1px solid var(--rule-2);border-left:0;padding-left:0}
+    /* triple stacks */
+    .triple{flex-direction:column;gap:48px;padding-top:72px}
+    /* footer columns: two per row */
+    .footer{padding:48px var(--gut) 24px}
+    .footer-wrap{padding-top:72px}
+    .footer .lcol{flex:1 1 40%;min-width:40%}
+    .footer .legal{flex-direction:column;align-items:flex-start;gap:10px}
   }
 
-  /* per golf: this poster-cell has no border */
-  .poster-cell.no-border{border:0}
-
-  /* face image slot — supplied by user (golf drive link) */
-  .face-ph{
-    display:flex;align-items:center;justify-content:center;
-    background:
-      radial-gradient(45% 35% at 50% 35%, rgba(220,200,180,.18) 0%, transparent 65%),
-      linear-gradient(180deg, #141414 0%, #050505 100%);
-  }
-  .face-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-  .face-img:not([src]){display:none}
-  .face-svg{width:64%;max-width:280px;height:auto;opacity:.55}
-  .face-tag{
-    position:absolute;left:14px;top:14px;
-    font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
-    color:rgba(240,234,224,.6);
-  }
-  .face-tag em{font-style:normal;color:var(--accent);font-weight:500;letter-spacing:.04em}
-
-  /* music-mid: poster centred at 80% (per golf) */
-  .music-mid{display:flex;align-items:center;justify-content:center;padding:22px;background:transparent;aspect-ratio:auto}
-  .music-mid-inner{position:relative;width:80%;aspect-ratio:5/1;border:1px solid rgba(10,10,10,.25);background:var(--warm-2);overflow:hidden}
-  .music-mid-inner .scene{position:absolute;inset:0;
-    background:
-      radial-gradient(40% 60% at 30% 50%, rgba(60,40,20,.25) 0%, transparent 60%),
-      radial-gradient(35% 50% at 70% 45%, rgba(220,100,60,.4) 0%, transparent 60%),
-      linear-gradient(180deg, #f0e0c0 0%, #d8c098 100%);
-  }
-  .music-mid-inner .ph-label{position:absolute;bottom:10px;right:12px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(60,40,20,.55)}
-
-  /* drop-in image swap for ph placeholders — sits above the .ph background
-     but BELOW the labels/overlays that follow it in source order. */
-  .film-img img.ph-img,
-  .pillar-img img.ph-img,
-  .lcard .img img.ph-img,
-  .hero-stage img.hero-img-real,
-  .music-mid img.art-img{
-    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
-  }
-  /* graphic tile cards: real photo replaces the bitmap title + portrait silhouette */
-  .lcard .img.graphic.has-img{background:#0a0a0a}
-  .lcard .img.graphic.has-img .gx-title{display:none}
-  .lcard .img.graphic.has-img .gx-portrait{display:none}
-
-  .p-A{--p-bg:#3a2419}.p-B{--p-bg:#1c2733}.p-C{--p-bg:#2a1b2e}
-  .p-D{--p-bg:#1e2e1d}.p-E{--p-bg:#3a1a1a}.p-F{--p-bg:#221f2c}
-  .p-G{--p-bg:#2c2517}.p-H{--p-bg:#1a1a1a}.p-I{--p-bg:#332218}
-  .p-bookm{--p-bg:#3a3018}
-  .p-arch{--p-bg:#2c2218}
-
-  /* ═════════════════ DESKTOP (≥960px) ═════════════════ */
-  /* tablet: pillars become 3 columns */
-  @media (min-width:768px){
-    .pillars{flex-direction:row;gap:24px}
-    .pillar{flex:1 1 0;min-width:0}
-  }
-
-  @media (min-width:960px){
-    body{font-size:16px}
-    .topbar,
-    .nav-row,
-    .hero-row,
-    .latest-section,
-    .posters,
-    .profile,
-    .section-head,
-    .film-grid,
-    .more-row,
-    .music,
-    .pillars,
-    footer.colophon{
-      padding-left:max(40px, calc((100% - 1320px)/2));
-      padding-right:max(40px, calc((100% - 1320px)/2));
-    }
-
-    /* HEADER */
-    .topbar{height:72px;grid-template-columns:1fr auto 1fr}
-    .topbar .brand{font-size:30px}
-    .topbar .brand .dot{width:15px;height:15px}
-    .topbar .iconbtn.hamburger{justify-self:start}
-    .topbar .iconbtn.search{justify-self:end}
-    .iconbtn.hamburger{display:flex}
-    /* second row nav */
-    .nav-row{display:flex;justify-content:center;align-items:center;gap:34px;padding:14px 0}
-    .nav-row a{
-      display:inline-flex;align-items:center;gap:8px;
-      font-size:14px;font-weight:500;color:var(--ink-2);
-      position:relative;padding:6px 0;
-    }
-    .nav-row a::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ink);display:inline-block}
-    .nav-row a:nth-child(1)::before{background:var(--accent)}
-    .nav-row a:nth-child(2)::before{background:#D86A4A}
-    .nav-row a:nth-child(3)::before{background:#1F8A5B}
-    .nav-row a:nth-child(4)::before{background:#C9A227}
-    .nav-row a:nth-child(5)::before{background:#7A5BD6}
-    .nav-row a::after{content:"";position:absolute;left:15px;right:0;bottom:0;height:1px;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .25s}
-    .nav-row a:hover::after{transform:scaleX(1)}
-
-    /* HERO ROW: 9-col striped hero + 3-col Latest sidebar. */
-    .hero-row{
-      padding:64px max(40px, calc((100% - 1320px)/2)) 96px;
-      grid-template-columns:9fr 3fr;gap:48px;align-items:stretch;
-    }
-    /* min-width:0 so the 9fr cell doesn't grow past its share when children have wide intrinsic widths */
-    .hero{padding:0;min-width:0}
-    .hero-frame{padding:48px 56px;display:block}
-    /* width-driven layout: panel width = 100% of frame; height derived from 37:24.
-       both children at height:100% then derive their widths from their own aspect-ratios. */
-    .hero-inner{flex-direction:row;width:100%;aspect-ratio:37/24}
-    .hero-stage{height:100%;width:auto;flex:0 0 auto;aspect-ratio:15/16}
-    .hero-card{height:100%;width:auto;aspect-ratio:29/48;flex:0 0 auto;padding:48px;justify-content:flex-start;gap:20px}
-    .hero-card h1{font-size:22px;line-height:1.3}
-    .hero-card .body{font-size:16px}
-    .hero-card .stamp{font-size:32px}
-
-    /* LATEST sidebar matches hero height via grid stretch */
-    .latest-side{padding:0;min-width:0}
-
-    /* LATEST — 4-col asymmetric, 1 featured + 3 standard */
-    .latest-section{padding:48px max(40px, calc((100% - 1320px)/2)) 0}
-    .latest-grid{grid-template-columns:1.15fr 1fr 1fr 1fr;gap:32px;align-items:start}
-    .lcard.feature .img{aspect-ratio:3/5}
-    .lcard.feature .overlay .ti{font-size:20px}
-    .lcard.feature .overlay .by{font-size:22px}
-    .lcard.standard .img{aspect-ratio:1/1}
-    .lcard.standard .ti{font-size:18px}
-    .lcard.standard .by{font-size:20px}
-
-    /* POSTERS — 4 col strip */
-    .posters{margin-top:64px;grid-template-columns:1.5fr 1fr 1fr 1fr;border-left:1px solid var(--ink);border-right:1px solid var(--ink)}
-    .poster-cell{border-bottom:0;border-right:1px solid var(--ink)}
-    .poster-cell:last-child{border-right:0}
-    .poster-img{aspect-ratio:1/1.18}
-    .poster-label{font-size:34px}
-
-    /* PROFILE — 3-col black section */
-    .profile{
-      margin-top:48px;
-      display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:48px;align-items:center;
-      padding:72px max(40px, calc((100% - 1320px)/2));min-height:560px;
-    }
-    .profile-name .en{font-size:96px;line-height:.92}
-    .profile-name .th{font-size:46px;margin-top:6px}
-    .profile-portrait{aspect-ratio:4/5;height:100%;max-height:520px}
-    .profile-side{align-items:flex-end;text-align:right}
-    .profile-body{font-size:20px;max-width:30ch}
-    .profile-cta{align-self:flex-end}
-
-    /* SECTION HEAD + FILM GRID: section-head spans the same width as the 3-col grid below.
-       no horizontal margin since the shared padding rule already insets it. */
-    .section-head{margin:96px 0 32px}
-    .film-grid{grid-template-columns:repeat(3,1fr);gap:36px 28px;padding-bottom:8px}
-    .film-img{aspect-ratio:4/3}
-    .film-ti{font-size:15.5px}
-    .more-row{padding-top:48px}
-
-    /* MUSIC — 15/70/15 triptych */
-    .music{
-      margin:0;padding:96px max(40px, calc((100% - 1320px)/2));
-      grid-template-columns:15% 70% 15%;
-      gap:0;
-      align-items:stretch;
-    }
-    .music-left{padding:0 24px 0 0;border:0}
-    .music-mid{aspect-ratio:4/1;height:auto;min-height:0;border:0}
-    .music-right{padding:0 0 0 24px;border:0}
-    .music-snippet{font-size:14px}
-    .music-side .ti{font-size:14px}
-    .music-side .by{font-size:20px}
-
-    /* PILLARS — 3 col on desktop (golf) */
-    .pillars{margin-top:96px;display:flex;flex-direction:row;gap:36px}
-    .pillar{flex:1 1 0;min-width:0}
-    .pillar-img{aspect-ratio:4/3}
-
-    /* FOOTER */
-    footer.colophon{
-      margin-top:96px;padding-top:64px;padding-bottom:36px;
-      display:grid;grid-template-columns:1fr 2.6fr;gap:56px;align-items:start;
-    }
-    .ft-cols{grid-column:2;grid-row:1;padding-top:0;border-top:0;grid-template-columns:repeat(5,1fr);gap:24px}
-    .ft-bottom{grid-column:1 / -1;flex-direction:row;justify-content:space-between;align-items:center}
-  }
-
-  @media (min-width:1280px){
-    .profile-name .en{font-size:120px}
-    .profile-name .th{font-size:54px}
+  /* ════════ OVERLAYS · menu + search ════════ */
+  .overlay-panel{position:fixed;inset:0;z-index:100;background:var(--white);
+    display:flex;flex-direction:column;opacity:0;visibility:hidden;transform:translateY(-12px);
+    transition:opacity .28s ease,transform .28s ease,visibility .28s}
+  .overlay-panel.open{opacity:1;visibility:visible;transform:none}
+  .overlay-top{height:72px;flex:0 0 auto;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
+    padding:0 var(--gut);border-bottom:1px solid var(--rule)}
+  .overlay-top .logo{grid-column:2;justify-self:center;font-family:var(--serif);font-weight:700;font-size:30px;line-height:30px;letter-spacing:-.3px;color:var(--ink);display:inline-flex;align-items:center}
+  .overlay-top .logo .dot{width:15px;height:15px;border-radius:7.5px;background:var(--blue);display:inline-block;margin:0 1px}
+  .overlay-close{justify-self:end;width:48px;height:48px;border-radius:24px;display:grid;place-items:center;color:var(--ink)}
+  .overlay-close:hover{background:#f4f4f4}
+  .overlay-close svg{width:20px;height:20px}
+  /* menu body */
+  .menu-body{flex:1 1 auto;overflow-y:auto;max-width:1063px;width:100%;margin:0 auto;padding:24px var(--gut) 40px;display:flex;flex-direction:column}
+  .menu-body a.mlink{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 0;
+    border-bottom:1px solid var(--rule);font-family:var(--serif);font-weight:500;font-size:30px;line-height:1.1;color:var(--ink);text-wrap:pretty}
+  .menu-body a.mlink:hover{color:var(--blue)}
+  .menu-body a.mlink .d{width:9px;height:9px;border-radius:50%;background:var(--blue);flex:0 0 auto}
+  .menu-foot{display:flex;justify-content:space-between;gap:16px;margin-top:28px;
+    font-family:var(--mono);font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink-2)}
+  /* search body */
+  .search-body{flex:1 1 auto;max-width:1063px;width:100%;margin:0 auto;padding:64px var(--gut)}
+  .search-field{display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--ink);padding-bottom:18px}
+  .search-field svg{width:26px;height:26px;color:var(--ink);flex:0 0 auto}
+  .search-field input{flex:1 1 auto;border:0;outline:0;background:none;font-family:var(--serif);font-weight:400;font-size:34px;line-height:1.2;color:var(--ink)}
+  .search-field input::placeholder{color:#bdbdbd}
+  .search-sugg{margin-top:36px;display:flex;flex-direction:column;gap:18px}
+  .search-sugg .lbl{font-family:var(--sans);font-weight:500;font-size:12px;line-height:20px;letter-spacing:1px;color:var(--blue)}
+  .search-sugg .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .search-sugg .chips a{display:inline-flex;align-items:center;height:40px;padding:0 18px;border:1px solid var(--rule);border-radius:999px;
+    font-family:var(--sans);font-weight:500;font-size:14px;color:var(--ink)}
+  .search-sugg .chips a:hover{border-color:var(--ink)}
+  body.lock{overflow:hidden}
+  @media (max-width:640px){
+    .overlay-top{height:60px}
+    .overlay-top .logo{font-size:24px;line-height:24px}
+    .menu-body a.mlink{font-size:24px;padding:18px 0}
+    .search-field input{font-size:24px}
   }
 </style>
 </head>
 <body>
 
-<!-- 01 · HEADER -->
-<header class="topbar" id="topbar">
-  <button class="iconbtn hamburger" id="hamburger" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="menuPanel">
-    <span></span><span></span><span></span>
-  </button>
-  <a class="brand" href="#" aria-label="CinemaDots — หน้าแรก">Cinema<span class="dot" aria-hidden="true"></span>Dots</a>
-  <button class="iconbtn search" aria-label="ค้นหา">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-  </button>
-</header>
-<nav class="nav-row" aria-label="หมวดหลัก">
-  <a href="#">ภาพยนตร์</a>
-  <a href="#">บุคคล</a>
-  <a href="#">ดนตรี</a>
-  <a href="#">หนังสือ</a>
-  <a href="#">ประวัติศาสตร์</a>
-</nav>
+<div class="page">
 
-<main data-screen-label="01 Home (Wireframe Build)">
+  <!-- 2 · TOP APP BAR -->
+  <header class="appbar">
+    <button class="iconbtn menu" id="menuBtn" aria-label="เปิดเมนู" aria-expanded="false"><span></span><span></span><span></span></button>
+    <a class="logo" href="#" aria-label="CinemaDots — หน้าแรก">Cinema<span class="dot" aria-hidden="true"></span>Dots</a>
+    <button class="iconbtn search" id="searchBtn" aria-label="ค้นหา" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+    </button>
+  </header>
 
-<!-- 02 · HERO + LATEST SIDEBAR — striped Cannes-affiche frame (9 cols) + clean sidebar (3 cols) -->
-<div class="hero-row">
+  <!-- 3 · CATEGORY NAV (desktop only; categories also in hamburger for tablet/mobile) -->
+  <nav class="catnav" aria-label="หมวดหมู่หลัก">
+    <a href="#"><span class="d"></span>ภาพยนตร์</a>
+    <a href="#"><span class="d"></span>บุคคล</a>
+    <a href="#"><span class="d"></span>ดนตรี</a>
+    <a href="#"><span class="d"></span>หนังสือ</a>
+    <a href="#"><span class="d"></span>ประวัติศาสตร์</a>
+  </nav>
 
-  <!-- HERO (9 cols) — striped poster frame -->
-  <section class="hero" aria-label="บทความประจำสัปดาห์">
-    <figure class="hero-frame">
-      <div class="hero-inner">
-        <!-- hero image — 15:16 near-square portrait -->
-        <div class="hero-stage" role="img" aria-label="ภาพประกอบจากภาพยนตร์ ‘Alien: Romulus’">
-          <div class="hero-img"></div>
-          <img class="hero-img-real" alt="" src="https://assets.mubicdn.net/images/notebook/post_images/43249/images-w1400.jpg?1779292727" onerror="this.style.display='none'" />
-          <div class="hero-img-label">Hero · 15:16 · drop image</div>
-        </div>
-        <!-- headline + description card — 29:48 tall portrait -->
-        <aside class="hero-card">
-          <span class="cat"><span class="d"></span> ภาพยนตร์</span>
-          <h1>‘<em>Alien: Romulus</em>’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน และความผิดหวังครั้ง…</h1>
-          <p class="body">Cailee Spaeny และ David Jonsson เป็นส่วนที่ดีที่สุดของหนังชุด ‘Alien’ ที่มีความน่าผิดหวังในแบบที่ดีกว่า Cailee Spaeny และ David Jonsson เป็นส่วนที่ดี</p>
-          <span class="stamp">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-          <div class="laurel" aria-hidden="true">
-            <svg viewBox="0 0 120 60" fill="none" stroke="#0D0D0D" stroke-width="1.2">
-              <path d="M30 50c-14 0-22-12-22-22" stroke-linecap="round"/>
-              <path d="M12 32c4-1 8 0 11 3" stroke-linecap="round"/>
-              <path d="M14 38c5-1 9 1 12 4" stroke-linecap="round"/>
-              <path d="M18 44c4-1 8 0 11 3" stroke-linecap="round"/>
-              <path d="M10 26c3-2 7-2 10 0" stroke-linecap="round"/>
-              <path d="M12 20c3-2 7-3 11-2" stroke-linecap="round"/>
-              <path d="M90 50c14 0 22-12 22-22" stroke-linecap="round"/>
-              <path d="M108 32c-4-1-8 0-11 3" stroke-linecap="round"/>
-              <path d="M106 38c-5-1-9 1-12 4" stroke-linecap="round"/>
-              <path d="M102 44c-4-1-8 0-11 3" stroke-linecap="round"/>
-              <path d="M110 26c-3-2-7-2-10 0" stroke-linecap="round"/>
-              <path d="M108 20c-3-2-7-3-11-2" stroke-linecap="round"/>
-              <text x="60" y="30" text-anchor="middle" font-family="Sarabun, serif" font-size="8" font-style="italic" stroke="none" fill="#0D0D0D">Festival de</text>
-              <text x="60" y="42" text-anchor="middle" font-family="Sarabun, serif" font-size="10" font-weight="700" stroke="none" fill="#0D0D0D">CANNES</text>
-            </svg>
-            <span class="lbl">Official Selection 2026</span>
-          </div>
-        </aside>
+  <main data-screen-label="01 Homepage — Hi-Fi">
+
+  <!-- 4.1 · HERO -->
+  <section class="hero" aria-label="บทความเด่นประจำสัปดาห์">
+    <figure class="figure">
+      <div class="ph figure-img"><img class="fill" src="https://assets.mubicdn.net/images/notebook/post_images/43249/images-w1400.jpg?1779292727" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">hero · 15:16 · drop image</span></div>
+      <div class="figure-card">
+        <span class="kicker">ภาพยนตร์</span>
+        <h1>‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน และบทพิสูจน์ว่าแฟรนไชส์เก่าแก่นี้ยังเดินทางต่อไปได้อีกไกล</h1>
+        <p>Cailee Spaeny และ David Jonsson เป็นส่วนที่ดีที่สุดของหนังชุด ‘Alien’ ที่มีความน่าผิดหวังในแบบที่ดีกว่าหนังภาคก่อนหน้าหลายเท่า</p>
+        <span class="byline">CinemaDots</span>
       </div>
     </figure>
+
+    <aside class="latest" aria-label="ล่าสุด">
+      <div class="latest-head"><span class="dot"></span><span class="lbl">Latest</span><span class="rule"></span></div>
+      <a class="item" href="#"><span class="kicker">ภาพยนตร์</span><h3>‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน</h3><span class="byline">CinemaDots</span></a>
+      <a class="item" href="#"><span class="kicker">บุคคล</span><h3>Park Chan-wook กับการรับเก้าอี้ประธานคณะกรรมการคานส์</h3><span class="byline">CinemaDots</span></a>
+      <a class="item" href="#"><span class="kicker">ดนตรี</span><h3>เพลงประกอบที่กลายเป็นตัวละครหนึ่งของเรื่อง</h3><span class="byline">CinemaDots</span></a>
+      <a class="item" href="#"><span class="kicker">ประวัติศาสตร์</span><h3>จุดต้นกำเนิดภาพลักษณ์แห่งเทศกาลเมืองคานส์</h3><span class="byline">CinemaDots</span></a>
+    </aside>
   </section>
 
-  <!-- LATEST sidebar (3 cols) — clean, no frame, no stripes, no images -->
-  <aside class="latest-side" aria-label="ล่าสุด">
-    <div class="latest-head"><span class="d"></span> Latest</div>
-    <div class="latest-list">
-      <a class="latest-item" href="#">
-        <span class="latest-cat"><span class="d"></span> ภาพยนตร์</span>
-        <p class="latest-ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน</p>
-        <span class="latest-by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
+  <!-- 4.2 · CANNES 2026 FEATURE ROW -->
+  <section class="cannes" aria-label="Cannes 2026">
+    <div class="label-row">
+      <span class="dot"></span><span class="lbl">Cannes 2026</span><span class="rule"></span>
+      <span class="meta">งานครั้งที่ 79 · 12–23 พ.ค. 2569</span>
+    </div>
+    <div class="row">
+      <a class="ph feature" href="#" style="--chip:#3a1a1a"><img class="fill" src="https://i.pinimg.com/736x/84/10/26/8410262067832df970523d324cc3040e.jpg" alt="" loading="lazy" onerror="this.style.display='none'" />
+        <span class="ph-cap">festival · 9:16</span>
+        <span class="overlay">Festival de Cannes 2026 — เทศกาลภาพยนตร์เมืองคานส์ครั้งที่ 79</span>
       </a>
-      <a class="latest-item" href="#">
-        <span class="latest-cat"><span class="d"></span> ภาพยนตร์</span>
-        <p class="latest-ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน</p>
-        <span class="latest-by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
+      <a class="card" href="#">
+        <div class="ph sq" style="--chip:#1c2733"><img class="fill" src="https://i.pinimg.com/1200x/cc/4f/08/cc4f08f8a898ac7b2a45bcac392457d6.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">film still · b/w</span></div>
+        <div class="meta">
+          <span class="kicker">ภาพยนตร์</span>
+          <h3>All of a Sudden ผลงานล่าสุด Ryusuke Hamaguchi</h3>
+          <p class="ex">การกลับมาอีกครั้งของผู้กำกับ ‘Drive My Car’ ที่คานส์ปีนี้</p>
+          <span class="byline">CinemaDots</span>
+        </div>
       </a>
-      <a class="latest-item" href="#">
-        <span class="latest-cat"><span class="d"></span> ภาพยนตร์</span>
-        <p class="latest-ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน</p>
-        <span class="latest-by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
+      <a class="card" href="#">
+        <div class="ph sq" style="--chip:#1c2733"><img class="fill" src="https://i.pinimg.com/1200x/6d/01/4d/6d014d71f52593006ea2a7f1fcf4b00c.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">portrait · b/w</span></div>
+        <div class="meta">
+          <span class="kicker">บุคคล</span>
+          <h3>Park Chan-wook ประธานคณะกรรมการตัดสิน ของคานส์ 2026</h3>
+          <p class="ex">ผู้กำกับเกาหลีใต้คนแรกที่ได้เป็นประธานคณะกรรมการตัดสิน…</p>
+          <span class="byline">CinemaDots</span>
+        </div>
       </a>
-      <a class="latest-item" href="#">
-        <span class="latest-cat"><span class="d"></span> ภาพยนตร์</span>
-        <p class="latest-ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน</p>
-        <span class="latest-by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
+      <a class="card" href="#">
+        <div class="ph sq" style="--chip:#3a1a1a"><img class="fill" src="https://i.pinimg.com/736x/20/47/3f/20473fd21f57b8c74059cc359d5199b2.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">archive · poster</span></div>
+        <div class="meta">
+          <span class="kicker">ประวัติศาสตร์</span>
+          <h3>จุดต้นกำเนิดภาพลักษณ์ แห่งเทศกาลภาพยนตร์เมืองคานส์</h3>
+          <p class="ex">ในช่วงทศวรรษ 1950–1970 ที่หล่อหลอมเอกลักษณ์ของเทศกาล…</p>
+          <span class="byline">CinemaDots</span>
+        </div>
       </a>
     </div>
-  </aside>
+  </section>
 
-</div>
-
-<!-- 03 · LATEST — 1 featured + 3 standard cards, no borders/backgrounds (restored per golf) -->
-<section class="latest-section" aria-label="ล่าสุด — รายการเด่น">
-  <div class="latest-rail">
-    <span class="d"></span>
-    <span>Latest</span>
-    <span class="line"></span>
-    <span>ฉบับ 047 · 11–17 พ.ค. 2569</span>
+  <!-- 4.3 · DIRECTOR FEATURE (DARK) -->
+  <div class="director-wrap">
+    <section class="director" aria-label="ผู้กำกับประจำสัปดาห์ — Hirokazu Koreeda">
+      <div class="names">
+        <span class="orig">是枝裕和</span>
+        <span class="en">Hirokazu</span>
+        <span class="th">อิโรคาสุ</span>
+        <span class="en rg">Koreeda</span>
+        <span class="th">โคเรเอดะ</span>
+      </div>
+      <div class="ph portrait"><img class="fill" src="https://i.pinimg.com/736x/ca/dd/5c/cadd5c571e94cbe440867a168a942086.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">portrait · 4:5</span></div>
+      <div class="mid">
+        <span class="eyebrow">ผู้กำกับ<span class="d"></span>นักเขียนบท</span>
+        <p class="quote">“ภาพยนตร์เกี่ยวกับครอบครัว ความทรงจำ และความเป็นมนุษย์ ซึ่งกลายเป็นเอกลักษณ์สำคัญของเขา บนเวทีโลกและที่เทศกาลคานส์”</p>
+        <a class="pill" href="#">เพิ่มเติม</a>
+      </div>
+    </section>
   </div>
 
-  <div class="latest-grid">
+  <!-- 4.4 · SECTION HEADER -->
+  <div class="section-head">
+    <div class="label-row">
+      <span class="dot"></span><span class="lbl">ภาพยนตร์</span><span class="rule"></span>
+      <span class="meta">เนื้อหาน่าสนใจ</span>
+    </div>
+  </div>
 
-    <!-- featured card 1: 3:5 portrait, text overlays image, no scrim -->
-    <a class="lcard feature" href="#">
-      <div class="img p-E">
-        <div class="ph"></div>
-        <img class="ph-img" alt="" src="https://assets.mubicdn.net/images/notebook/post_images/32248/images-w1400.jpg?1611632039" onerror="this.style.display='none'" />
-        <div class="overlay">
-          <span class="kicker"><span class="d"></span> ภาพยนตร์</span>
-          <p class="ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน</p>
-          <span class="by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
+  <!-- 4.5 · REVIEW GRID -->
+  <section class="review" aria-label="ภาพยนตร์ — เนื้อหาน่าสนใจ">
+    <a class="card" href="#">
+      <div class="ph img" style="--chip:#3a2419"><img class="fill" src="https://i.pinimg.com/1200x/1a/b5/bd/1ab5bdfe80a2b6b2d32aa4091ab54346.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">shibuya b/w</span></div>
+      <div class="txt"><span class="kicker">ภาพยนตร์<span class="sep"></span><span class="alt">บทวิจารณ์</span></span>
+        <h3>‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน</h3>
+        <span class="byline">CinemaDots</span></div>
+    </a>
+    <a class="card" href="#">
+      <div class="ph img" style="--chip:#1c2733"><img class="fill" src="https://i.pinimg.com/1200x/b6/ea/2f/b6ea2f61fc060c7eda3b8b0c6f2380f2.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">dusk skyline</span></div>
+      <div class="txt"><span class="kicker">ภาพยนตร์<span class="sep"></span><span class="alt">บทวิจารณ์</span></span>
+        <h3>‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน</h3>
+        <span class="byline">CinemaDots</span></div>
+    </a>
+    <a class="card" href="#">
+      <div class="ph img" style="--chip:#221f2c"><img class="fill" src="https://i.pinimg.com/1200x/ef/7f/ac/ef7fac69e9043c8f38e20ad830b36296.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">rocket trail</span></div>
+      <div class="txt"><span class="kicker">ภาพยนตร์<span class="sep"></span><span class="alt">บทวิจารณ์</span></span>
+        <h3>‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน</h3>
+        <span class="byline">CinemaDots</span></div>
+    </a>
+    <a class="card" href="#">
+      <div class="ph img" style="--chip:#3a1a1a"><img class="fill" src="https://i.pinimg.com/1200x/96/49/cb/9649cb8d5a90dba5ffe44b415007681a.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">dust scene</span></div>
+      <div class="txt"><span class="kicker">ภาพยนตร์<span class="sep"></span><span class="alt">บทวิจารณ์</span></span>
+        <h3>‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน</h3>
+        <span class="byline">CinemaDots</span></div>
+    </a>
+    <a class="card" href="#">
+      <div class="ph img" style="--chip:#2a1b2e"><img class="fill" src="https://i.pinimg.com/736x/99/af/bc/99afbc62b0804c8fddf6d30a47d36a60.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">interior · 35mm</span></div>
+      <div class="txt"><span class="kicker">ภาพยนตร์<span class="sep"></span><span class="alt">บทวิจารณ์</span></span>
+        <h3>‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน</h3>
+        <span class="byline">CinemaDots</span></div>
+    </a>
+    <a class="card" href="#">
+      <div class="ph img" style="--chip:#332218"><img class="fill" src="https://i.pinimg.com/1200x/45/30/f7/4530f79dd444ae085f2a1469bc97c1ab.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">temple · golden hour</span></div>
+      <div class="txt"><span class="kicker">ภาพยนตร์<span class="sep"></span><span class="alt">บทวิจารณ์</span></span>
+        <h3>‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน</h3>
+        <span class="byline">CinemaDots</span></div>
+    </a>
+  </section>
+
+  <!-- 4.6 · MORE BUTTON -->
+  <div class="more-row"><a class="pill" href="#">เพิ่มเติม</a></div>
+
+  <!-- 4.7 · MUSIC FEATURE -->
+  <section class="music" aria-label="ดนตรี">
+    <div class="mcol left">
+      <div class="label-row"><span class="dot"></span><span class="lbl">ดนตรี</span></div>
+      <p class="snip">เพลงประกอบที่กลายเป็นตัวละครหนึ่งของเรื่อง และวิธีที่ดนตรีนำพาความทรงจำ</p>
+      <a class="pill-th" href="#">เพิ่มเติม</a>
+    </div>
+    <div class="banner"><img class="fill" src="https://i.pinimg.com/1200x/a5/5c/91/a55c9167b161b77b5980873adac2277b.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="cap">commissioned illustration · 4:1</span></div>
+    <div class="mcol right">
+      <div class="ritem"><h3>เมื่อสกอร์ของหนังกลายเป็นอัลบั้มที่ยืนได้ด้วยตัวเอง</h3><span class="byline">CinemaDots</span></div>
+      <div class="ritem"><h3>บทสัมภาษณ์นักทำดนตรีประกอบรุ่นใหม่ของวงการ</h3><span class="byline">CinemaDots</span></div>
+    </div>
+  </section>
+
+  <!-- 4.8 · THREE-COLUMN SECTION -->
+  <section class="triple" aria-label="บุคคล · หนังสือ · ประวัติศาสตร์">
+    <div class="tcol">
+      <div class="label-row"><span class="dot"></span><span class="lbl">บุคคล</span><span class="rule"></span></div>
+      <a class="ph lead" href="#" style="--chip:#3a2419"><img class="fill" src="https://i.pinimg.com/1200x/d6/75/59/d6755911e06c166d93f8ab77e133eda3.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">portrait · red wall</span></a>
+      <a class="litem" href="#"><span class="kicker">บทวิจารณ์</span><h3>บทสนทนากับช่างภาพผู้อยู่เบื้องหลังภาพจำของยุคสมัย</h3><span class="byline">CinemaDots</span></a>
+      <a class="litem" href="#"><span class="kicker">บทวิจารณ์</span><h3>นักแสดงนำที่เลือกบทบาทด้วยเหตุผลนอกกระแส</h3><span class="byline">CinemaDots</span></a>
+      <a class="litem" href="#"><span class="kicker">บทวิจารณ์</span><h3>นักเขียนบทกับการดัดแปลงวรรณกรรมสู่จอเงิน</h3><span class="byline">CinemaDots</span></a>
+      <a class="pill" href="#">เพิ่มเติม</a>
+    </div>
+    <div class="tcol">
+      <div class="label-row"><span class="dot"></span><span class="lbl">หนังสือ</span><span class="rule"></span></div>
+      <a class="ph lead" href="#" style="--chip:#3a3018"><img class="fill" src="https://i.pinimg.com/736x/03/20/ee/0320ee293d3484ca4c9bdc56f6c100bf.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">book · top-down</span></a>
+      <a class="litem" href="#"><span class="kicker">บทวิจารณ์</span><h3>การอ่านควบคู่: หนังสือที่กลายเป็นภาพยนตร์ในปีนี้</h3><span class="byline">CinemaDots</span></a>
+      <a class="litem" href="#"><span class="kicker">บทวิจารณ์</span><h3>บทวิจารณ์หนังสือว่าด้วยประวัติศาสตร์ภาพยนตร์</h3><span class="byline">CinemaDots</span></a>
+      <a class="litem" href="#"><span class="kicker">บทวิจารณ์</span><h3>เรียงความว่าด้วยภาษาภาพกับภาษาเขียน</h3><span class="byline">CinemaDots</span></a>
+      <a class="pill" href="#">เพิ่มเติม</a>
+    </div>
+    <div class="tcol">
+      <div class="label-row"><span class="dot"></span><span class="lbl">ประวัติศาสตร์</span><span class="rule"></span></div>
+      <a class="ph lead" href="#" style="--chip:#2c2218"><img class="fill" src="https://i.pinimg.com/1200x/69/fb/00/69fb00aee8d399d5404b50610dc4816e.jpg" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">archive · books</span></a>
+      <a class="litem" href="#"><span class="kicker">บทวิจารณ์</span><h3>หนังไทยยุค 2510s ที่หล่อหลอมรสนิยมของคนดู</h3><span class="byline">CinemaDots</span></a>
+      <a class="litem" href="#"><span class="kicker">บทวิจารณ์</span><h3>ฟิล์ม นัวร์ กับเงาดำที่ยังทอดยาวถึงปัจจุบัน</h3><span class="byline">CinemaDots</span></a>
+      <a class="litem" href="#"><span class="kicker">บทวิจารณ์</span><h3>คลังภาพและโรงหนังเก่าที่กำลังจะเลือนหาย</h3><span class="byline">CinemaDots</span></a>
+      <a class="pill" href="#">เพิ่มเติม</a>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- 5 · FOOTER -->
+  <div class="footer-wrap">
+    <footer class="footer">
+      <div class="cols">
+        <div class="brand">
+          <a class="logo" href="#">Cinema<span class="dot" aria-hidden="true"></span>Dots</a>
+          <p class="quote">“เมื่อภาพยนตร์ คือจุดเริ่มต้น — และจากที่นั่น เราเดินทางไปทุกที่”</p>
+          <div class="wordmark">CINEMADOTS</div>
+          <div class="socials">
+            <a aria-label="facebook" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l1-4h-4V7.5c0-1.1.4-2 2-2h2V2h-3c-3 0-4 1.8-4 4v4H7v4h3v8z"/></svg></a>
+            <a aria-label="instagram" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg></a>
+            <a aria-label="x" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 3h3l-7 8 8 10h-6l-5-6-5 6H3l8-9L3 3h6l4 5z"/></svg></a>
+            <a aria-label="threads" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M19 8c-1-3-3-5-7-5s-7 2-7 8 3 9 7 9c3 0 5-2 5-4s-2-3-5-3-4 1-4 2"/></svg></a>
+          </div>
+        </div>
+        <div class="lcol">
+          <h6><span class="d"></span>ภาพยนตร์</h6>
+          <ul><li><a href="#">บทวิจารณ์</a></li><li><a href="#">เรียงความ</a></li><li><a href="#">สัมภาษณ์</a></li><li><a href="#">เทศกาล Cannes</a></li><li><a href="#">หนังไทย</a></li></ul>
+        </div>
+        <div class="lcol">
+          <h6><span class="d"></span>บุคคล</h6>
+          <ul><li><a href="#">ผู้กำกับ</a></li><li><a href="#">นักแสดง</a></li><li><a href="#">นักเขียนบท</a></li><li><a href="#">ช่างภาพ</a></li><li><a href="#">ทีมหลังกล้อง</a></li></ul>
+        </div>
+        <div class="lcol">
+          <h6><span class="d"></span>ดนตรี</h6>
+          <ul><li><a href="#">เพลงประกอบ</a></li><li><a href="#">ศิลปิน</a></li><li><a href="#">อัลบั้ม</a></li><li><a href="#">บทสัมภาษณ์</a></li><li><a href="#">รายการคัดสรร</a></li></ul>
+        </div>
+        <div class="lcol">
+          <h6><span class="d"></span>หนังสือ</h6>
+          <ul><li><a href="#">การอ่านควบคู่</a></li><li><a href="#">บทวิจารณ์หนังสือ</a></li><li><a href="#">เรียงความ</a></li><li><a href="#">รายการคัดสรร</a></li><li><a href="#">การเขียนบท</a></li></ul>
+        </div>
+        <div class="lcol">
+          <h6><span class="d"></span>ประวัติศาสตร์</h6>
+          <ul><li><a href="#">หนังไทยยุค 2510s</a></li><li><a href="#">หนังไทยยุค 2520s</a></li><li><a href="#">ฟิล์ม นัวร์</a></li><li><a href="#">คลังภาพ</a></li><li><a href="#">โรงหนังเก่า</a></li></ul>
         </div>
       </div>
-    </a>
-
-    <!-- standard card 2: still treatment -->
-    <a class="lcard standard" href="#">
-      <div class="img p-B">
-        <div class="ph"></div>
-        <img class="ph-img" alt="" src="https://i.pinimg.com/1200x/40/f0/70/40f0707b31979f86264cb50deef8e4a0.jpg" onerror="this.style.display='none'" />
-        <div class="ph-label">film still · b/w</div>
+      <div class="legal">
+        <span>© 2569 CINEMADOTS — ALL THOUGHTS WELCOME.</span>
+        <span class="rt"><a href="#">Terms</a><span class="sep">·</span><a href="#">Privacy</a><span class="sep">·</span><a href="#">RSS</a><span class="sep">·</span><a href="/cdn-cgi/l/email-protection#1f7c70716b7e7c6b5f7c76717a727e7b706b6c316b77"><span class="__cf_email__" data-cfemail="1d7e7273697c7e695d7e747378707c7972696e336975">[email&#160;protected]</span></a></span>
       </div>
-      <div class="meta">
-        <span class="kicker"><span class="d"></span> ภาพยนตร์</span>
-        <p class="ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุด</p>
-        <span class="by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-      </div>
-    </a>
-
-    <!-- standard card 3: graphic treatment (teal) -->
-    <a class="lcard standard" href="#">
-      <div class="img graphic g-teal has-img">
-        <div class="gx-portrait"></div>
-        <img class="ph-img" alt="" src="https://i.pinimg.com/1200x/92/71/9b/92719b7a06fac9db55c8835a1068767b.jpg" onerror="this.style.display='none'" />
-        <div class="gx-title">SCARFACE / 1983</div>
-      </div>
-      <div class="meta">
-        <span class="kicker"><span class="d"></span> ภาพยนตร์</span>
-        <p class="ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุด</p>
-        <span class="by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-      </div>
-    </a>
-
-    <!-- standard card 4: graphic treatment (red) -->
-    <a class="lcard standard" href="#">
-      <div class="img graphic g-red has-img">
-        <div class="gx-portrait"></div>
-        <img class="ph-img" alt="" src="https://i.pinimg.com/736x/05/69/2f/05692f37f26017f9d3ae30f40debb525.jpg" onerror="this.style.display='none'" />
-        <div class="gx-title">MAD MAX</div>
-      </div>
-      <div class="meta">
-        <span class="kicker"><span class="d"></span> ภาพยนตร์</span>
-        <p class="ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุด</p>
-        <span class="by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-      </div>
-    </a>
-
+    </footer>
   </div>
-</section>
 
-<!-- 04 · CAILEE BLACK SECTION -->
-<section class="profile" aria-label="โปรไฟล์ประจำสัปดาห์ — Cailee Spaeny">
-  <h2 class="profile-name">
-    <span class="en">Cailee</span>
-    <span class="th">เคลลี่</span>
-    <span class="en two">Spaeny</span>
-    <span class="th">สแปนี่</span>
-  </h2>
-  <figure class="profile-portrait" role="img" aria-label="ภาพถ่ายโปรไฟล์ของ Cailee Spaeny — โทนต่ำ">
-    <div class="scene face-ph">
-      <!-- portrait from mubicdn (golf) -->
-      <img class="face-img" alt="Cailee Spaeny portrait" src="https://images.mubicdn.net/images/cast_member/568998/cache-388138-1603372866/image-w856.jpg?size=300x" onerror="this.removeAttribute('src')" />
-      <svg class="face-svg" viewBox="0 0 200 250" fill="none" stroke="rgba(240,234,224,.35)" stroke-width="1.2" aria-hidden="true">
-        <circle cx="100" cy="92" r="42"/>
-        <path d="M30 240c8-46 38-70 70-70s62 24 70 70" stroke-linecap="round"/>
-        <path d="M82 92c0 4 3 7 6 7M112 92c0 4 3 7 6 7" stroke-linecap="round"/>
-        <path d="M88 116c4 4 8 6 12 6s8-2 12-6" stroke-linecap="round"/>
-      </svg>
-      <div class="face-tag" hidden>portrait slot</div>
-    </div>
-    <div class="ph-label">Portrait · 4:5</div>
-  </figure>
-  <div class="profile-side">
-    <span class="profile-role">นักแสดง</span>
-    <p class="profile-body">จิตเภทแฟนซีคาแรคเตอร์ แจ๊คพ๊อตเบิร์น สารพัฒน์นิวๆ</p>
-    <a class="profile-cta" href="#">เพิ่มเติม</a>
-  </div>
-</section>
-
-<!-- 05 · ภาพยนตร์ SECTION -->
-<div class="section-head">
-  <span class="tag"><span class="d"></span> ภาพยนตร์</span>
-  <span class="line"></span>
-  <span class="meta">11 – 17 พ.ค. 2569</span>
 </div>
 
-<section class="film-grid" aria-label="ภาพยนตร์">
-  <a class="film-card" href="#">
-    <div class="film-img p-A"><div class="ph"></div><img class="ph-img" alt="" src="https://i.pinimg.com/1200x/4a/0e/7e/4a0e7e9ecd63c55b602a69affa60308b.jpg" onerror="this.style.display='none'" /><div class="ph-label">Shibuya b/w</div></div>
-    <div class="film-meta">
-      <span class="film-cat"><span class="d"></span> ภาพยนตร์ <span class="film-tag">บทวิจารณ์</span></span>
-      <p class="film-ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ ที่สุดของฤดูร้อน</p>
-      <span class="film-by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-    </div>
-  </a>
-  <a class="film-card" href="#">
-    <div class="film-img p-B"><div class="ph"></div><img class="ph-img" alt="" src="https://i.pinimg.com/1200x/c1/15/e3/c115e3e579faf3f9648c7d7cf11481bc.jpg" onerror="this.style.display='none'" /><div class="ph-label">dusk skyline</div></div>
-    <div class="film-meta">
-      <span class="film-cat"><span class="d"></span> ภาพยนตร์ <span class="film-tag">บทวิจารณ์</span></span>
-      <p class="film-ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ ที่สุดของฤดูร้อน</p>
-      <span class="film-by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-    </div>
-  </a>
-  <a class="film-card" href="#">
-    <div class="film-img p-F"><div class="ph"></div><img class="ph-img" alt="" src="https://i.pinimg.com/1200x/76/b1/7c/76b17c20ee323cb016381bd700591d57.jpg" onerror="this.style.display='none'" /><div class="ph-label">rocket trail</div></div>
-    <div class="film-meta">
-      <span class="film-cat"><span class="d"></span> ภาพยนตร์ <span class="film-tag">บทวิจารณ์</span></span>
-      <p class="film-ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ ที่สุดของฤดูร้อน</p>
-      <span class="film-by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-    </div>
-  </a>
-  <a class="film-card" href="#">
-    <div class="film-img p-E"><div class="ph"></div><img class="ph-img" alt="" src="https://i.pinimg.com/736x/6a/73/78/6a737869e7fc57ed7fa16e5d34d96e1d.jpg" onerror="this.style.display='none'" /><div class="ph-label">dust scene</div></div>
-    <div class="film-meta">
-      <span class="film-cat"><span class="d"></span> ภาพยนตร์ <span class="film-tag">บทวิจารณ์</span></span>
-      <p class="film-ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ ที่สุดของฤดูร้อน</p>
-      <span class="film-by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-    </div>
-  </a>
-  <a class="film-card" href="#">
-    <div class="film-img p-C"><div class="ph"></div><img class="ph-img" alt="" src="https://i.pinimg.com/736x/e9/33/e3/e933e384dba3915ec71ce06b0d74e220.jpg" onerror="this.style.display='none'" /><div class="ph-label">interior · 35mm</div></div>
-    <div class="film-meta">
-      <span class="film-cat"><span class="d"></span> ภาพยนตร์ <span class="film-tag">บทวิจารณ์</span></span>
-      <p class="film-ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ ที่สุดของฤดูร้อน</p>
-      <span class="film-by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-    </div>
-  </a>
-  <a class="film-card" href="#">
-    <div class="film-img p-I"><div class="ph"></div><img class="ph-img" alt="" src="https://i.pinimg.com/1200x/c5/93/db/c593db662b34cb434cd9927f6b2d4022.jpg" onerror="this.style.display='none'" /><div class="ph-label">temple · golden hour</div></div>
-    <div class="film-meta">
-      <span class="film-cat"><span class="d"></span> ภาพยนตร์ <span class="film-tag">บทวิจารณ์</span></span>
-      <p class="film-ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ ที่สุดของฤดูร้อน</p>
-      <span class="film-by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-    </div>
-  </a>
-</section>
-
-<div class="more-row">
-  <a class="more-btn" href="#">เพิ่มเติม</a>
-</div>
-
-<!-- 06 · MUSIC — 15/70/15 triptych, commissioned illustration -->
-<section class="music" aria-label="ดนตรี">
-  <div class="music-left">
-    <span class="music-tag">ดนตรี</span>
-    <p class="music-snippet">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน</p>
-    <a class="music-cta" href="#">เพิ่มเติม</a>
-  </div>
-  <div class="music-mid" aria-label="ภาพประกอบสำหรับหมวดดนตรี — illustration">
-    <div class="art"></div>
-    <img class="art-img" alt="" src="https://mubi.com/static/images/notebook-magazine/issue-banner/eight/wide.jpg" onerror="this.style.display='none'" />
-    <div class="art-tag">commissioned illustration · 4:1</div>
-  </div>
-  <div class="music-right">
-    <div class="music-side">
-      <p class="ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน</p>
-      <span class="by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-    </div>
-    <div class="music-side">
-      <p class="ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน</p>
-      <span class="by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-    </div>
-  </div>
-</section>
-
-<!-- 07 · PILLARS -->
-<section class="pillars" aria-label="หมวดหมู่อื่นๆ">
-
-  <div class="pillar people">
-    <div class="pillar-head">
-      <span class="tag"><span class="d"></span> บุคคล</span>
-      <span class="line"></span>
-    </div>
-    <a class="pillar-img" href="#"><div class="ph p-A"></div><img class="ph-img" alt="" src="https://i.pinimg.com/1200x/ec/d7/dc/ecd7dc92412e1ba10b5381744fce5713.jpg" onerror="this.style.display='none'" /><div class="ph-label">portrait · red wall</div></a>
-    <div class="pillar-list">
-      <a class="pillar-item" href="#">
-        <div class="meta"><span class="tag">บทวิจารณ์</span></div>
-        <p class="ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุด ของฤดูร้อน</p>
-        <span class="by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-      </a>
-      <a class="pillar-item" href="#">
-        <div class="meta"><span class="tag">บทวิจารณ์</span></div>
-        <p class="ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุด ของฤดูร้อน</p>
-        <span class="by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-      </a>
-      <a class="pillar-item" href="#">
-        <div class="meta"><span class="tag">บทวิจารณ์</span></div>
-        <p class="ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุด ของฤดูร้อน</p>
-        <span class="by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-      </a>
-    </div>
-    <div class="pillar-more"><a class="more-btn" href="#">เพิ่มเติม</a></div>
-  </div>
-
-  <div class="pillar book">
-    <div class="pillar-head">
-      <span class="tag"><span class="d"></span> หนังสือ</span>
-      <span class="line"></span>
-    </div>
-    <a class="pillar-img" href="#"><div class="ph p-bookm"></div><img class="ph-img" alt="" src="https://i.pinimg.com/1200x/be/bc/40/bebc4066869021fc3b96ad62ffb1233a.jpg" onerror="this.style.display='none'" /><div class="ph-label">book · top-down</div></a>
-    <div class="pillar-list">
-      <a class="pillar-item" href="#">
-        <div class="meta"><span class="tag">บทวิจารณ์</span></div>
-        <p class="ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุด ของฤดูร้อน</p>
-        <span class="by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-      </a>
-      <a class="pillar-item" href="#">
-        <div class="meta"><span class="tag">บทวิจารณ์</span></div>
-        <p class="ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุด ของฤดูร้อน</p>
-        <span class="by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-      </a>
-      <a class="pillar-item" href="#">
-        <div class="meta"><span class="tag">บทวิจารณ์</span></div>
-        <p class="ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุด ของฤดูร้อน</p>
-        <span class="by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-      </a>
-    </div>
-    <div class="pillar-more"><a class="more-btn" href="#">เพิ่มเติม</a></div>
-  </div>
-
-  <div class="pillar history">
-    <div class="pillar-head">
-      <span class="tag"><span class="d"></span> ประวัติศาสตร์</span>
-      <span class="line"></span>
-    </div>
-    <a class="pillar-img" href="#"><div class="ph p-arch"></div><img class="ph-img" alt="" src="https://i.pinimg.com/1200x/ef/41/3a/ef413a13b31b48189316b816d5118f4f.jpg" onerror="this.style.display='none'" /><div class="ph-label">archive · books</div></a>
-    <div class="pillar-list">
-      <a class="pillar-item" href="#">
-        <div class="meta"><span class="tag">บทวิจารณ์</span></div>
-        <p class="ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุด ของฤดูร้อน</p>
-        <span class="by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-      </a>
-      <a class="pillar-item" href="#">
-        <div class="meta"><span class="tag">บทวิจารณ์</span></div>
-        <p class="ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุด ของฤดูร้อน</p>
-        <span class="by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-      </a>
-      <a class="pillar-item" href="#">
-        <div class="meta"><span class="tag">บทวิจารณ์</span></div>
-        <p class="ti">‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุด ของฤดูร้อน</p>
-        <span class="by">Cinema<span class="dot" aria-hidden="true"></span>Dots</span>
-      </a>
-    </div>
-    <div class="pillar-more"><a class="more-btn" href="#">เพิ่มเติม</a></div>
-  </div>
-
-</section>
-
-</main>
-
-<!-- 08 · FOOTER -->
-<footer class="colophon">
-
-  <div class="ft-brand">
-    <a class="brand" href="#">Cinema<span class="dot"></span>Dots</a>
-    <p class="ft-quote">“เมื่อภาพยนตร์ คือจุดเริ่มต้น —<br>และจากที่นั่น เราเดินทางไปทุกที่”</p>
-    <div class="ft-quote-name">กองบรรณาธิการ CINEMADOTS</div>
-    <div class="ft-socials">
-      <a aria-label="facebook" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l1-4h-4V7.5c0-1.1.4-2 2-2h2V2h-3c-3 0-4 1.8-4 4v4H7v4h3v8z"/></svg></a>
-      <a aria-label="instagram" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg></a>
-      <a aria-label="x" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 3h3l-7 8 8 10h-6l-5-6-5 6H3l8-9L3 3h6l4 5z"/></svg></a>
-      <a aria-label="threads" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M19 8c-1-3-3-5-7-5s-7 2-7 8 3 9 7 9c3 0 5-2 5-4s-2-3-5-3-4 1-4 2"/></svg></a>
-    </div>
-  </div>
-
-  <div class="ft-cols">
-    <div class="ft-col">
-      <h6 class="films"><span class="d"></span> Movies</h6>
-      <ul>
-        <li><a href="#">บทวิจารณ์</a></li>
-        <li><a href="#">เรียงความ</a></li>
-        <li><a href="#">สัมภาษณ์</a></li>
-        <li><a href="#">เทศกาล Cannes</a></li>
-        <li><a href="#">หนังไทย</a></li>
-      </ul>
-    </div>
-    <div class="ft-col">
-      <h6 class="people"><span class="d"></span> People</h6>
-      <ul>
-        <li><a href="#">ผู้กำกับ</a></li>
-        <li><a href="#">นักแสดง</a></li>
-        <li><a href="#">นักเขียนบท</a></li>
-        <li><a href="#">ช่างภาพ</a></li>
-        <li><a href="#">ทีมหลังกล้อง</a></li>
-      </ul>
-    </div>
-    <div class="ft-col">
-      <h6 class="music"><span class="d"></span> Music</h6>
-      <ul>
-        <li><a href="#">เพลงประกอบ</a></li>
-        <li><a href="#">ศิลปิน</a></li>
-        <li><a href="#">อัลบั้ม</a></li>
-        <li><a href="#">บทสัมภาษณ์</a></li>
-        <li><a href="#">รายการคัดสรร</a></li>
-      </ul>
-    </div>
-    <div class="ft-col">
-      <h6 class="book"><span class="d"></span> Book</h6>
-      <ul>
-        <li><a href="#">การอ่านควบคู่</a></li>
-        <li><a href="#">บทวิจารณ์หนังสือ</a></li>
-        <li><a href="#">เรียงความ</a></li>
-        <li><a href="#">รายการคัดสรร</a></li>
-        <li><a href="#">การเขียนบท</a></li>
-      </ul>
-    </div>
-    <div class="ft-col">
-      <h6 class="history"><span class="d"></span> Historie</h6>
-      <ul>
-        <li><a href="#">หนังไทยยุค 2510s</a></li>
-        <li><a href="#">หนังไทยยุค 2520s</a></li>
-        <li><a href="#">ฟิล์ม นัวร์</a></li>
-        <li><a href="#">คลังภาพ</a></li>
-        <li><a href="#">โรงหนังเก่า</a></li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="ft-bottom">
-    <span>© 2569 CINEMADOTS — ALL THOUGHTS WELCOME.</span>
-    <span class="rt">
-      <a href="#">Terms</a>
-      <a href="#">Privacy</a>
-      <a href="#">RSS</a>
-      <a href="/cdn-cgi/l/email-protection#93f0fcfde7f2f0e7d3f0fafdf6fef2f7fce7e0bdf0fcfe"><span class="__cf_email__" data-cfemail="f99a96978d989a8db99a90979c94989d968d8ad79a9694">[email&#160;protected]</span></a>
-    </span>
-  </div>
-
-</footer>
-
-<!-- HAMBURGER MENU -->
-<nav class="menu-panel" id="menuPanel" aria-hidden="true">
-  <div class="menu-top">
+<!-- MENU OVERLAY -->
+<div class="overlay-panel" id="menuPanel" role="dialog" aria-modal="true" aria-label="เมนูหลัก">
+  <div class="overlay-top">
     <span></span>
-    <a class="brand" href="#">Cinema<span class="dot"></span>Dots</a>
-    <button class="menu-close" id="menuClose" aria-label="ปิดเมนู">ปิด</button>
+    <a class="logo" href="#">Cinema<span class="dot" aria-hidden="true"></span>Dots</a>
+    <button class="overlay-close" data-close aria-label="ปิดเมนู"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   </div>
-  <div class="menu-list">
-    <a href="#"><span>ภาพยนตร์</span><span class="d" style="background:#0014FF"></span></a>
-    <a href="#"><span>บุคคล</span><span class="d" style="background:#D86A4A"></span></a>
-    <a href="#"><span>ดนตรี</span><span class="d" style="background:#1F8A5B"></span></a>
-    <a href="#"><span>หนังสือ</span><span class="d" style="background:#C9A227"></span></a>
-    <a href="#"><span>ประวัติศาสตร์</span><span class="d" style="background:#7A5BD6"></span></a>
-    <a href="#"><span>คลัง</span><span class="d" style="background:#6B6B6B"></span></a>
-    <a href="#"><span>เกี่ยวกับ</span><span class="d" style="background:#6B6B6B"></span></a>
+  <nav class="menu-body" aria-label="หมวดหมู่ทั้งหมด">
+    <a class="mlink" href="#">ภาพยนตร์<span class="d"></span></a>
+    <a class="mlink" href="#">บุคคล<span class="d"></span></a>
+    <a class="mlink" href="#">ดนตรี<span class="d"></span></a>
+    <a class="mlink" href="#">หนังสือ<span class="d"></span></a>
+    <a class="mlink" href="#">ประวัติศาสตร์<span class="d"></span></a>
+    <div class="menu-foot">
+      <span>ฉบับสัปดาห์ที่ 047 · 2569</span>
+      <span>สมัครรับจดหมายข่าว →</span>
+    </div>
+  </nav>
+</div>
+
+<!-- SEARCH OVERLAY -->
+<div class="overlay-panel" id="searchPanel" role="dialog" aria-modal="true" aria-label="ค้นหา">
+  <div class="overlay-top">
+    <span></span>
+    <a class="logo" href="#">Cinema<span class="dot" aria-hidden="true"></span>Dots</a>
+    <button class="overlay-close" data-close aria-label="ปิดการค้นหา"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
   </div>
-  <div class="menu-foot">
-    <span>เวอร์ชั่น 1.0 · 2569</span>
-    <span>สมัครรับ →</span>
+  <div class="search-body">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+      <input id="searchInput" type="search" placeholder="ค้นหาบทความ ผู้กำกับ หรือภาพยนตร์…" autocomplete="off" />
+    </div>
+    <div class="search-sugg">
+      <span class="lbl">คำค้นยอดนิยม</span>
+      <div class="chips">
+        <a href="#">Cannes 2026</a>
+        <a href="#">Hirokazu Koreeda</a>
+        <a href="#">Alien: Romulus</a>
+        <a href="#">Park Chan-wook</a>
+        <a href="#">ฟิล์ม นัวร์</a>
+        <a href="#">เพลงประกอบ</a>
+      </div>
+    </div>
   </div>
-</nav>
+</div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   (function(){
-    const bar = document.getElementById('topbar');
-    const onScroll = () => {
-      if((window.scrollY || 0) > 24) bar.classList.add('scrolled');
-      else bar.classList.remove('scrolled');
-    };
-    window.addEventListener('scroll', onScroll, {passive:true});
-    onScroll();
-  })();
-  (function(){
-    const btn = document.getElementById('hamburger');
-    const panel = document.getElementById('menuPanel');
-    const close = document.getElementById('menuClose');
-    const open = (state) => {
-      panel.classList.toggle('open', state);
-      btn.setAttribute('aria-expanded', state ? 'true' : 'false');
-      panel.setAttribute('aria-hidden', state ? 'false' : 'true');
-      document.body.style.overflow = state ? 'hidden' : '';
-    };
-    btn.addEventListener('click', () => open(!panel.classList.contains('open')));
-    close.addEventListener('click', () => open(false));
-    panel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => open(false)));
-    document.addEventListener('keydown', e => { if(e.key === 'Escape') open(false); });
+    var body = document.body;
+    var menuBtn = document.getElementById('menuBtn');
+    var searchBtn = document.getElementById('searchBtn');
+    var menuPanel = document.getElementById('menuPanel');
+    var searchPanel = document.getElementById('searchPanel');
+    var searchInput = document.getElementById('searchInput');
+
+    function setOpen(panel, btn, open){
+      panel.classList.toggle('open', open);
+      if(btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      body.classList.toggle('lock', open);
+      if(open && panel === searchPanel && searchInput){ setTimeout(function(){ searchInput.focus(); }, 320); }
+    }
+    function closeAll(){
+      setOpen(menuPanel, menuBtn, false);
+      setOpen(searchPanel, searchBtn, false);
+    }
+
+    menuBtn.addEventListener('click', function(){ var o = !menuPanel.classList.contains('open'); closeAll(); setOpen(menuPanel, menuBtn, o); });
+    searchBtn.addEventListener('click', function(){ var o = !searchPanel.classList.contains('open'); closeAll(); setOpen(searchPanel, searchBtn, o); });
+
+    document.querySelectorAll('[data-close]').forEach(function(b){ b.addEventListener('click', closeAll); });
+    menuPanel.querySelectorAll('a.mlink').forEach(function(a){ a.addEventListener('click', closeAll); });
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeAll(); });
   })();
 </script>
 
