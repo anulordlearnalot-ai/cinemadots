@@ -110,7 +110,10 @@
       #355c7d;
     padding:40px 36px;display:flex;gap:10px;align-items:stretch}
   .figure-img{flex:1.4 1 0;aspect-ratio:15/16;--chip:#1a1410}
-  .figure-card{flex:1 1 0;background:var(--white);padding:42px 25px;display:flex;flex-direction:column;gap:18px;min-width:0}
+  .figure-card{position:relative;flex:1 1 0;background:var(--white);padding:42px 25px;display:flex;flex-direction:column;gap:18px;min-width:0}
+  /* MdF “we are attending” label as a background picture, 20% of card width */
+  .figure-card .mdf-label{position:absolute;bottom:25px;right:25px;width:54%;height:auto;opacity:.2;z-index:0;pointer-events:none}
+  .figure-card > :not(.mdf-label){position:relative;z-index:1}
   .figure-card h1{margin:0;font-family:var(--sans);font-weight:500;font-size:20px;line-height:26px;color:var(--ink);overflow-wrap:anywhere;
     display:-webkit-box;-webkit-line-clamp:4;line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
   .figure-card p{margin:0;font-family:var(--serif);font-weight:400;font-size:16px;line-height:24px;color:var(--ink-2);text-wrap:pretty;
@@ -409,6 +412,7 @@
     <figure class="figure">
       <div class="ph figure-img"><img class="fill" src="https://assets.mubicdn.net/images/notebook/post_images/43249/images-w1400.jpg?1779292727" alt="" loading="lazy" onerror="this.style.display='none'" /><span class="ph-cap">hero · 15:16 · drop image</span></div>
       <div class="figure-card">
+        <img class="mdf-label" src="https://www.marchedufilm.com/wp-content/uploads/2026/01/mdf26-label-screen_we_are_attending-noir.png" alt="We Are Attending — Marché du Film 2026" loading="lazy" onerror="this.style.display='none'" />
         <span class="kicker">ภาพยนตร์</span>
         <h1>‘Alien: Romulus’: ความผิดหวังครั้งใหญ่ที่สุดของฤดูร้อน และบทพิสูจน์ว่าแฟรนไชส์เก่าแก่นี้ยังเดินทางต่อไปได้อีกไกล</h1>
         <p>Cailee Spaeny และ David Jonsson เป็นส่วนที่ดีที่สุดของหนังชุด ‘Alien’ ที่มีความน่าผิดหวังในแบบที่ดีกว่าหนังภาคก่อนหน้าหลายเท่า ผู้กำกับ Fede Álvarez เลือกพาแฟรนไชส์กลับไปสู่รากเหง้าของความสยองในอวกาศ ด้วยบรรยากาศอึดอัดและการออกแบบงานสร้างที่คารวะต้นฉบับปี 1979 อย่างตั้งใจ แม้บทจะยังติดกับดักของการอ้างอิงตัวเองมากเกินไป แต่จังหวะการเล่าเรื่องในครึ่งหลังก็เรียกความตึงเครียดกลับคืนมาได้อย่างน่าพอใจ และทิ้งคำถามถึงอนาคตของซีรีส์นี้ไว้ให้ผู้ชมขบคิดต่อหลังไฟในโรงสว่างขึ้น</p>
@@ -621,7 +625,7 @@
       </div>
       <div class="legal">
         <span>© 2569 CINEMADOTS — ALL THOUGHTS WELCOME.</span>
-        <span class="rt"><a href="#">Terms</a><span class="sep">·</span><a href="#">Privacy</a><span class="sep">·</span><a href="#">RSS</a><span class="sep">·</span><a href="/cdn-cgi/l/email-protection#74171b1a0015170034171d1a111915101b00075a001c"><span class="__cf_email__" data-cfemail="caa9a5a4beaba9be8aa9a3a4afa7abaea5beb9e4bea2">[email&#160;protected]</span></a></span>
+        <span class="rt"><a href="#">Terms</a><span class="sep">·</span><a href="#">Privacy</a><span class="sep">·</span><a href="#">RSS</a><span class="sep">·</span><a href="/cdn-cgi/l/email-protection#0a6965647e6b697e4a6963646f676b6e657e79247e62"><span class="__cf_email__" data-cfemail="a8cbc7c6dcc9cbdce8cbc1c6cdc5c9ccc7dcdb86dcc0">[email&#160;protected]</span></a></span>
       </div>
     </footer>
   </div>
