@@ -61,20 +61,17 @@
   .label-row .rule{flex:1 1 auto;height:1px;background:var(--ink);min-width:24px}
   .label-row .meta{font-family:var(--sans);font-weight:500;font-size:14px;line-height:1;color:var(--ink);flex:0 0 auto;white-space:nowrap}
 
-  /* outline pill button — mono variant */
-  .pill{display:inline-flex;align-items:center;justify-content:center;height:48px;padding:0 26px;
-    border:1px solid var(--ink);border-radius:999px;font-family:var(--mono);font-size:11px;line-height:17px;
-    letter-spacing:1.98px;color:var(--ink);transition:background .18s,color .18s}
-  .pill:hover{background:var(--ink);color:var(--white)}
-  /* outline pill — thai variant */
-  .pill-th{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:10px 20px;
-    border:1px solid var(--ink);border-radius:999px;font-family:var(--sans);font-weight:500;font-size:14px;line-height:1;
-    color:var(--ink);transition:background .18s,color .18s}
-  .pill-th:hover{background:var(--ink);color:var(--white)}
+  /* text + arrow CTA (replaces outline pills) */
+  .pill,.pill-th{display:inline-flex;align-items:center;gap:8px;height:auto;padding:0;border:0;border-radius:0;background:none;
+    font-family:var(--sans);font-weight:600;font-size:14px;line-height:1;letter-spacing:.2px;color:var(--ink);transition:color .18s}
+  .pill::after,.pill-th::after{content:"\2192";font-family:var(--sans);font-size:15px;line-height:1;transition:transform .18s}
+  .pill:hover,.pill-th:hover{background:none;color:var(--blue)}
+  .pill:hover::after,.pill-th:hover::after{transform:translateX(4px)}
 
   /* ════════ 2 · TOP APP BAR ════════ */
   .appbar{position:sticky;top:0;z-index:40;height:72px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
-    padding:0 var(--gut);background:var(--white);border-bottom:1px solid var(--rule)}
+    padding:0 var(--gut);background:var(--white);border-bottom:1px solid var(--rule);transition:transform .32s ease}
+  .appbar.nav-hidden{transform:translateY(-100%)}
   .appbar .iconbtn{width:48px;height:48px;border-radius:24px;display:grid;place-items:center;color:var(--ink)}
   .appbar .iconbtn:hover{background:#f4f4f4}
   .appbar .menu{justify-self:start;flex-direction:column;gap:4px;display:flex;align-items:center;justify-content:center}
@@ -96,14 +93,20 @@
   /* ════════ 4.1 · HERO ════════ */
   /* DESKTOP: figure left + Latest sidebar right (original layout) */
   .hero{display:grid;grid-template-columns:1fr 254px;gap:48px;align-items:start;padding:48px var(--gut)}
-  /* A) yellow figure panel */
-  .figure{background:var(--yellow);padding:40px 36px;display:flex;gap:10px;align-items:stretch}
+  /* A) hero figure panel — Cannes 2026 key-art background */
+  .figure{
+    background:linear-gradient(rgba(10,10,20,.18), rgba(10,10,20,.30)),
+      url("https://www.rogerebert.com/wp-content/uploads/2026/05/2026_CANNES_SIGNATURES_WEB_COULEUR-3_2560x1440-scaled-jpg.webp") center/cover no-repeat,
+      #355c7d;
+    padding:40px 36px;display:flex;gap:10px;align-items:stretch}
   .figure-img{flex:1.4 1 0;aspect-ratio:15/16;--chip:#1a1410}
   .figure-card{flex:1 1 0;background:var(--white);padding:42px 25px;display:flex;flex-direction:column;gap:18px;min-width:0}
   .figure-card h1{margin:0;font-family:var(--sans);font-weight:500;font-size:20px;line-height:26px;color:var(--ink);overflow-wrap:anywhere;
     display:-webkit-box;-webkit-line-clamp:4;line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
-  .figure-card p{margin:0;font-family:var(--serif);font-weight:400;font-size:16px;line-height:24px;color:var(--ink-2);text-wrap:pretty}
-  .figure-card .byline{margin-top:auto}
+  .figure-card p{margin:0;font-family:var(--serif);font-weight:400;font-size:16px;line-height:24px;color:var(--ink-2);text-wrap:pretty;
+    display:-webkit-box;-webkit-line-clamp:6;line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}
+  .figure-card .cardfoot{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .figure-card .cardfoot .byline{margin:0}
   /* B) latest — sidebar on desktop */
   .latest{display:flex;flex-direction:column}
   .latest .latest-head{display:flex;align-items:center;gap:12px;margin-bottom:4px}
@@ -117,7 +120,7 @@
 
   /* ════════ 4.2 · CANNES 2026 FEATURE ROW ════════ */
   .cannes{padding:48px var(--gut) 0}
-  .cannes .row{display:grid;grid-template-columns:268px repeat(3,1fr);gap:32px;align-items:start;margin-top:24px}
+  .cannes .row{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;align-items:start;margin-top:24px}
   /* tall feature card — fixed 9:16 */
   .cannes .feature{aspect-ratio:9/16;position:relative;--chip:#3a1a1a;box-shadow:inset 0 0 30px rgba(0,0,0,.55)}
   .cannes .feature .ph-cap{z-index:3}
@@ -148,8 +151,8 @@
   .director .eyebrow .d{width:5px;height:5px;border-radius:50%;background:rgba(240,230,216,.5);display:inline-block}
   .director .quote{margin:0;font-family:var(--serif);font-weight:300;font-style:italic;font-size:20px;line-height:29px;
     color:rgba(240,230,216,.92);text-wrap:pretty}
-  .director .mid .pill{height:48px;padding:0 22px;border-color:rgba(255,255,255,.85);color:var(--cream)}
-  .director .mid .pill:hover{background:var(--cream);color:var(--dark)}
+  .director .mid .pill{color:var(--cream)}
+  .director .mid .pill:hover{background:none;color:#fff}
   /* left column — big name block, left-aligned */
   .director .names{flex:1 1 0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-align:left;color:var(--cream);line-height:1;min-width:0}
   .director .names .orig{font-family:var(--serif);font-weight:400;font-size:clamp(26px,3.4vw,36px);line-height:1.1;color:var(--cream)}
@@ -174,10 +177,10 @@
   /* ════════ 4.7 · MUSIC FEATURE ════════ */
   .music{padding:96px var(--gut) 0;display:flex;align-items:center;gap:0}
   .music .mcol{flex:0 0 159px;display:flex;flex-direction:column;gap:24px}
-  .music .mcol.left{flex:0 0 191px;padding-right:24px;align-self:flex-start}
+  .music .mcol.left{flex:0 1 20%;min-width:160px;padding-right:24px;align-self:flex-start}
   .music .mcol.right{padding-left:24px}
   .music .mcol.left .label-row{flex-wrap:wrap}
-  .music .mcol .snip{margin:0;font-family:var(--sans);font-weight:500;font-size:14px;line-height:21px;color:var(--ink);text-wrap:pretty}
+  .music .mcol .snip{margin:0;font-family:var(--sans);font-weight:500;font-size:16px;line-height:24px;color:var(--ink);text-wrap:pretty}
   .music .mcol .pill-th{align-self:flex-start}
   .music .banner{flex:1 1 auto;aspect-ratio:744/261;position:relative;overflow:hidden;
     background:
@@ -189,18 +192,23 @@
   .music .banner .cap{position:absolute;right:14px;bottom:13px;font-family:var(--mono);font-size:10px;
     line-height:15px;letter-spacing:1.4px;text-transform:lowercase;color:rgba(60,40,20,.55)}
   .music .mcol.right .ritem{display:flex;flex-direction:column;gap:8px}
-  .music .mcol.right .ritem + .ritem{padding-top:24px;border-top:1px solid var(--rule-2)}
-  .music .mcol.right .ritem h3{margin:0;font-family:var(--serif);font-weight:500;font-size:15.5px;line-height:20.9px;color:var(--ink);text-wrap:pretty}
+  .music .mcol.right .ritem + .ritem{padding-top:24px;
+    background-image:repeating-linear-gradient(to right,#c4c4c4 0 6px,transparent 6px 11px);
+    background-repeat:no-repeat;background-position:left top;background-size:100% 1px}
+  .music .mcol.right .ritem h3{margin:0;font-family:var(--sans);font-weight:500;font-size:15.5px;line-height:20.9px;color:var(--ink);text-wrap:pretty}
 
   /* ════════ 4.8 · THREE-COLUMN SECTION ════════ */
   .triple{padding:96px var(--gut) 0;display:flex;gap:36px}
-  .triple .tcol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:18px}
-  .triple .tcol .lead{aspect-ratio:330/248}
-  .triple .tcol .litem{padding:18px 0;display:flex;flex-direction:column;gap:8px;
+  .triple .tcol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:0}
+  .triple .tcol .lead{aspect-ratio:330/248;margin-top:16px}
+  .triple .tcol .litem{padding:15px 0;display:flex;flex-direction:column;gap:8px;
     background-image:repeating-linear-gradient(to right, #c4c4c4 0 6px, transparent 6px 11px);
     background-repeat:no-repeat;background-position:left bottom;background-size:100% 1px}
   .triple .tcol .litem h3{margin:0;font-family:var(--sans);font-weight:500;font-size:16px;line-height:22px;color:var(--ink);text-wrap:pretty}
-  .triple .tcol .pill{align-self:center;margin-top:4px}
+  /* last list item in each column drops its dashed underline */
+  .triple .tcol .litem:has(+ .pill){background-image:none}
+  .triple .tcol .litem:last-child{background-image:none}
+  .triple .tcol .pill{align-self:center;margin-top:16px}
 
   /* ════════ 5 · FOOTER ════════ */
   .footer-wrap{padding-top:96px}
@@ -235,12 +243,13 @@
     .catnav{display:none}
     /* hero: figure full-bleed edge-to-edge (no padding), latest below with gutters */
     .hero{display:block;padding:0}
+    .figure{padding:40px 36px 52px}
     .latest{display:grid;grid-template-columns:1fr 1fr;column-gap:32px;row-gap:0;padding:48px var(--gut) 0}
     .latest .latest-head{grid-column:1 / -1}
-    /* cannes: 2 columns, feature spans full width on its own row */
+    /* cannes: 2 columns; feature keeps its 9:16 position like the other cards */
     .cannes .row{grid-template-columns:1fr 1fr;gap:24px}
-    .cannes .feature{grid-column:1 / -1;height:auto;aspect-ratio:16/7}
-    .cannes .feature .overlay{font-size:24px;line-height:30px;max-width:60%}
+    .cannes .feature{aspect-ratio:9/16}
+    .cannes .feature .overlay{font-size:20px;line-height:26px;max-width:80%}
     /* director: name + portrait side by side, quote spans below */
     .director{flex-wrap:wrap;gap:32px;padding:56px var(--gut)}
     .director .names{flex:1 1 280px;justify-content:center;align-items:flex-start;text-align:left}
@@ -250,18 +259,25 @@
     /* review grid: 2 columns */
     .review{grid-template-columns:1fr 1fr;column-gap:24px;row-gap:32px}
     /* music: stack */
-    .music{flex-direction:column;align-items:stretch;gap:32px;padding-top:80px}
+    .music{flex-direction:column;align-items:stretch;gap:28px;padding:80px var(--gut) 28px}
     .music .mcol.left{align-self:stretch}
     .music .mcol.left .label-row{flex-wrap:nowrap}
     .music .mcol{flex:1 1 auto}
     .music .mcol.left,.music .mcol.right{padding:0}
     .music .mcol.right{flex-direction:row;gap:24px}
     .music .mcol.right .ritem{flex:1 1 0}
-    .music .mcol.right .ritem + .ritem{padding-top:0;border-top:0;border-left:1px solid var(--rule-2);padding-left:24px}
-    /* triple: keep 3 columns, tighter */
-    .triple{gap:24px;padding-top:80px}
+    .music .mcol.right .ritem + .ritem{padding-top:0;padding-left:24px;border-top:0;
+      background-image:repeating-linear-gradient(to bottom,#c4c4c4 0 6px,transparent 6px 11px);
+      background-repeat:no-repeat;background-position:left top;background-size:1px 100%}
+    /* triple: keep 3 columns, tighter (top gap comes from music's bottom padding) */
+    .triple{gap:24px;padding-top:0}
     /* footer: brand full width, columns wrap below */
     .footer .brand{flex:1 1 100%}
+    /* legal bar: full width, distributed equally */
+    .footer .cols{justify-content:space-between}
+    .footer .lcol{flex:1 1 0;min-width:0}
+    .footer .legal{flex-direction:column;align-items:center;text-align:center;gap:12px}
+    .footer .legal .rt{width:100%;justify-content:space-between}
   }
 
   /* ═══════════════════ MOBILE (≤640px) ═══════════════════ */
@@ -274,7 +290,7 @@
     .catnav{display:none}
     /* hero figure full-bleed (no padding); image stacks over card */
     .hero{padding:0}
-    .figure{flex-direction:column;padding:18px}
+    .figure{flex-direction:column;padding:18px 18px 32px}
     .figure-img{flex:none;width:100%;aspect-ratio:1/1}
     .figure-card{flex:none;width:100%;padding:24px 20px;gap:14px}
     .latest{grid-template-columns:1fr;padding:40px var(--gut) 0}
@@ -297,16 +313,20 @@
     .review{grid-template-columns:1fr;row-gap:32px}
     .more-row{padding-top:40px}
     /* music: items stack vertically again */
-    .music{padding-top:72px}
+    .music{padding:72px var(--gut) 28px}
     .music .mcol.right{flex-direction:column;gap:0}
-    .music .mcol.right .ritem + .ritem{padding-top:24px;border-top:1px solid var(--rule-2);border-left:0;padding-left:0}
-    /* triple stacks */
-    .triple{flex-direction:column;gap:48px;padding-top:72px}
+    .music .mcol.right .ritem:first-child{padding-bottom:24px}
+    .music .mcol.right .ritem + .ritem{padding-top:24px;padding-left:0;
+      background-image:repeating-linear-gradient(to right,#c4c4c4 0 6px,transparent 6px 11px);
+      background-repeat:no-repeat;background-position:left top;background-size:100% 1px}
+    /* triple stacks (top gap comes from music's bottom padding) */
+    .triple{flex-direction:column;gap:48px;padding-top:0}
     /* footer columns: two per row */
     .footer{padding:48px var(--gut) 24px}
     .footer-wrap{padding-top:72px}
     .footer .lcol{flex:1 1 40%;min-width:40%}
-    .footer .legal{flex-direction:column;align-items:flex-start;gap:10px}
+    .footer .legal{flex-direction:column;align-items:center;text-align:center;gap:12px}
+    .footer .legal .rt{width:100%;justify-content:space-between}
   }
 
   /* ════════ OVERLAYS · menu + search ════════ */
