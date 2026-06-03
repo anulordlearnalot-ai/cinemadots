@@ -16,6 +16,8 @@
     --mono:'IBM Plex Mono', ui-monospace, monospace;
     /* responsive side gutter */
     --gut:40px;
+    /* wider gutter for full-bleed chrome (top bar, footer, director) */
+    --gut-wide:40px;
   }
   *{box-sizing:border-box}
   figure{margin:0}
@@ -27,10 +29,11 @@
 
   /* full-bleed desktop: fills the viewport left-to-right at any width */
   .page{width:100%;background:var(--white)}
-  /* roomier gutters on large/ultra-wide screens so content isn't glued to the edges */
-  @media (min-width:1440px){:root{--gut:72px}}
-  @media (min-width:1920px){:root{--gut:120px}}
-  @media (min-width:2560px){:root{--gut:200px}}
+  /* roomier gutters on large screens. On big monitors the body content is held to
+     70% width (15% padding each side); top bar / footer / director stay wider (--gut-wide) */
+  @media (min-width:1440px){:root{--gut:72px;--gut-wide:72px}}
+  @media (min-width:1920px){:root{--gut:15%;--gut-wide:120px}}
+  @media (min-width:2560px){:root{--gut:15%;--gut-wide:200px}}
 
   /* shared placeholder image block (color-chip + gradient + mono caption) */
   .ph{position:relative;background:var(--chip,#1a1410);overflow:hidden}
@@ -70,7 +73,7 @@
 
   /* ════════ 2 · TOP APP BAR ════════ */
   .appbar{position:sticky;top:0;z-index:40;height:72px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
-    padding:0 var(--gut);background:var(--white);border-bottom:1px solid var(--rule);transition:transform .32s ease}
+    padding:0 var(--gut-wide);background:var(--white);border-bottom:1px solid var(--rule);transition:transform .32s ease}
   .appbar.nav-hidden{transform:translateY(-100%)}
   .appbar .iconbtn{width:48px;height:48px;border-radius:24px;display:grid;place-items:center;color:var(--ink)}
   .appbar .iconbtn:hover{background:#f4f4f4}
@@ -139,7 +142,8 @@
   /* ════════ 4.3 · DIRECTOR FEATURE (DARK) ════════ */
   .director-wrap{padding-top:48px}
   /* layout (Golf): name block LEFT · portrait CENTRE · quote RIGHT */
-  .director{background:var(--dark);padding:64px var(--gut);display:flex;gap:48px;align-items:center}
+  /* desktop: tall, airy dark band — vertical padding ≈30% of viewport height */
+  .director{background:var(--dark);padding:max(96px,15vh) var(--gut);display:flex;gap:48px;align-items:center}
   .director .portrait{flex:0 0 363px;aspect-ratio:363/453;
     --chip:#101010;position:relative;align-self:center}
   .director .portrait::after{background:
