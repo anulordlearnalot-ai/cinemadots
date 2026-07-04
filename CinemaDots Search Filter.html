@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CinemaDots — ค้นหาและกรองบทความ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/cinemadots.css" />
+<style>
+  /* ════════ BANNER ════════ */
+  .banner{background:var(--hero-bg,#f1efe9);border-bottom:1px solid var(--rule)}
+  .banner .wrap{max-width:1440px;margin:0 auto;padding:48px var(--gut) 44px;display:flex;flex-direction:column;gap:16px}
+  .banner .crumb{margin-bottom:4px}
+  .banner .htitle{margin:0;font-family:var(--sans);font-weight:600;font-size:clamp(34px,5vw,60px);line-height:1.03;letter-spacing:-.5px;color:var(--ink);display:flex;align-items:center;gap:16px}
+  .banner .htitle .bdot{width:15px;height:15px;border-radius:50%;background:var(--blue);flex:0 0 auto;transform:translateY(2px)}
+  .banner .standfirst{margin:0;font-family:var(--serif);font-weight:400;font-size:18px;line-height:29px;color:var(--ink-2);max-width:62ch;text-wrap:pretty}
+
+  /* ════════ 3-COLUMN LAYOUT ════════ */
+  .searchlayout{max-width:1440px;margin:0 auto;padding:44px var(--gut) 0;
+    display:grid;grid-template-columns:211px minmax(0,1fr) 210px;gap:clamp(32px,3.4vw,56px);align-items:start}
+
+  /* ── LEFT: FILTER RAIL ── */
+  .filterpanel{position:sticky;top:96px;display:flex;flex-direction:column}
+  .fp-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:16px;
+    background-image:repeating-linear-gradient(to right,#cfcabf 0 6px,transparent 6px 11px);background-repeat:no-repeat;background-position:left bottom;background-size:100% 1px}
+  .fp-top .lbl{font-family:var(--sans);font-weight:600;font-size:15px;letter-spacing:.5px;color:var(--ink);display:inline-flex;align-items:center;gap:9px}
+  .fp-top .lbl .dot{width:7px;height:7px;border-radius:50%;background:var(--blue)}
+  .fp-top .clear{font-family:var(--mono);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-2);opacity:0;pointer-events:none;transition:opacity .16s,color .16s}
+  .fp-top .clear.on{opacity:1;pointer-events:auto}
+  .fp-top .clear:hover{color:var(--blue)}
+
+  .fp-search{margin-top:22px;display:flex;align-items:center;gap:10px;border:1px solid var(--ink);border-radius:999px;padding:0 16px;height:46px}
+  .fp-search svg{width:17px;height:17px;color:var(--ink);flex:0 0 auto}
+  .fp-search input{flex:1 1 auto;border:0;outline:0;background:none;font-family:var(--sans);font-weight:500;font-size:14px;color:var(--ink);min-width:0}
+  .fp-search input::placeholder{color:#a8a49b}
+  .fp-search .x{flex:0 0 auto;width:20px;height:20px;border-radius:50%;display:none;place-items:center;color:var(--ink-2)}
+  .fp-search .x.on{display:grid}
+  .fp-search .x:hover{color:var(--ink)}
+  .fp-search .x svg{width:12px;height:12px}
+
+  .facet{margin-top:34px;display:flex;flex-direction:column}
+  .facet .fhead{display:flex;align-items:center;gap:11px;margin-bottom:14px}
+  .facet .fhead .lbl{font-family:var(--sans);font-weight:600;font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink);flex:0 0 auto}
+  .facet .fhead .rule{flex:1 1 auto;height:1px;background:var(--rule);min-width:12px}
+  .checkopt{display:flex;align-items:center;gap:11px;padding:8px 0;cursor:pointer;user-select:none}
+  .checkopt .box{width:18px;height:18px;border:1.4px solid var(--rule-2);border-radius:4px;flex:0 0 auto;display:grid;place-items:center;transition:border-color .14s,background .14s}
+  .checkopt .box svg{width:11px;height:11px;color:var(--white);opacity:0;transform:scale(.6);transition:opacity .12s,transform .12s}
+  .checkopt input{position:absolute;opacity:0;pointer-events:none}
+  .checkopt input:checked + .box{background:var(--blue);border-color:var(--blue)}
+  .checkopt input:checked + .box svg{opacity:1;transform:none}
+  .checkopt .name{flex:1 1 auto;font-family:var(--sans);font-weight:500;font-size:14px;line-height:1.3;color:var(--ink);text-wrap:pretty}
+  .checkopt .n{font-family:var(--mono);font-size:11px;color:var(--ink-2);flex:0 0 auto}
+  .checkopt:hover .box{border-color:var(--ink)}
+  .checkopt:hover .name{color:var(--blue)}
+  .checkopt.is-empty{opacity:.38}
+  .checkopt.is-empty:hover .name{color:var(--ink)}
+
+  /* ── CENTER: RESULTS ── */
+  .resultsbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    padding-bottom:18px;background-image:repeating-linear-gradient(to right,#e2e0da 0 6px,transparent 6px 11px);background-repeat:no-repeat;background-position:left bottom;background-size:100% 1px}
+  .resultsbar .count{font-family:var(--mono);font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink-2)}
+  .resultsbar .count b{color:var(--ink);font-weight:500}
+  .sortwrap{display:flex;align-items:center;gap:9px}
+  .sortwrap label{font-family:var(--mono);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-2)}
+  .sortwrap .sel{position:relative;display:inline-flex;align-items:center}
+  .sortwrap select{appearance:none;border:1px solid var(--rule);border-radius:999px;background:var(--white);
+    font-family:var(--sans);font-weight:500;font-size:13px;color:var(--ink);padding:9px 34px 9px 15px;cursor:pointer}
+  .sortwrap select:hover{border-color:var(--ink)}
+  .sortwrap .sel svg{position:absolute;right:13px;width:12px;height:12px;color:var(--ink-2);pointer-events:none}
+
+  /* horizontal quick-filter bar (Finsweet-style) */
+  .filterbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:26px;padding-bottom:24px;
+    background-image:repeating-linear-gradient(to right,#e2e0da 0 6px,transparent 6px 11px);background-repeat:no-repeat;background-position:left bottom;background-size:100% 1px}
+  .filterbar .flabel{font-family:var(--mono);font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink-2);margin-right:4px}
+  .filterbar .tag{cursor:pointer}
+
+  /* active filter chips */
+  .activechips{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+  .activechips:empty{display:none}
+  .achip{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 8px 0 14px;border:1px solid var(--ink);border-radius:999px;
+    font-family:var(--sans);font-weight:500;font-size:13px;color:var(--ink);background:var(--white)}
+  .achip .k{font-family:var(--mono);font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--ink-2)}
+  .achip button{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;color:var(--ink-2)}
+  .achip button:hover{background:var(--ink);color:var(--white)}
+  .achip button svg{width:11px;height:11px}
+
+  /* card grid — 3 items per row */
+  .rgrid{margin-top:28px;display:grid;grid-template-columns:repeat(3,1fr);column-gap:28px;row-gap:40px}
+  .acard{display:flex;flex-direction:column}
+  .acard .img{aspect-ratio:3/2;--chip:#1c2733}
+  .acard .body{padding-top:13px;display:flex;flex-direction:column;gap:7px}
+  .acard h3{margin:0;font-family:var(--sans);font-weight:500;font-size:17px;line-height:23px;color:var(--ink);text-wrap:pretty}
+  .acard:hover h3{color:var(--blue)}
+  .acard p{margin:0;font-family:var(--serif);font-weight:400;font-size:13.5px;line-height:21px;color:var(--ink-2);text-wrap:pretty}
+  .acard .metaline{display:flex;align-items:center;gap:9px;margin-top:1px}
+  .acard .metaline .date{font-family:var(--sans);font-weight:500;font-size:12px;letter-spacing:.3px;color:var(--ink-2)}
+  .acard .metaline .mdot{width:3px;height:3px;border-radius:50%;background:var(--ink-2);opacity:.55}
+
+  /* empty state */
+  .empty{display:none;flex-direction:column;align-items:center;gap:14px;text-align:center;padding:80px 20px}
+  .empty.on{display:flex}
+  .empty .ring{width:56px;height:56px;border:1px solid var(--rule-2);border-radius:50%;display:grid;place-items:center;color:var(--ink-2)}
+  .empty .ring svg{width:22px;height:22px}
+  .empty h3{margin:0;font-family:var(--sans);font-weight:600;font-size:20px;color:var(--ink)}
+  .empty p{margin:0;font-family:var(--serif);font-size:15px;line-height:24px;color:var(--ink-2);max-width:34ch}
+  .empty button{margin-top:6px}
+
+  /* pagination */
+  .pager{margin-top:52px;padding-top:32px;display:flex;justify-content:center;align-items:center;gap:8px;
+    background-image:repeating-linear-gradient(to right,#e2e0da 0 6px,transparent 6px 11px);background-repeat:no-repeat;background-position:left top;background-size:100% 1px}
+  .pager button.pg{min-width:42px;height:42px;padding:0 8px;display:inline-flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:13px;color:var(--ink);border-radius:999px;border:1px solid transparent}
+  .pager button.pg:hover{border-color:var(--rule)}
+  .pager button.pg.cur{background:var(--ink);color:var(--white)}
+  .pager button.pg:disabled{opacity:.3;pointer-events:none}
+  .pager .gap{min-width:22px;text-align:center;font-family:var(--mono);font-size:13px;color:var(--ink-2)}
+  .pager button.nav{border:1px solid var(--ink);letter-spacing:1.2px;font-size:11px;padding:0 16px}
+  .pager button.nav:hover{background:var(--ink);color:var(--white)}
+  .pager.hide{display:none}
+
+  /* ── RIGHT: ADS RAIL ── */
+  .adrail{position:sticky;top:96px;display:flex;flex-direction:column;gap:28px}
+  .ad{position:relative;border:1px solid var(--rule);background:#fafaf8;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .ad .ad-mark{position:absolute;top:10px;left:12px;font-family:var(--mono);font-size:9px;letter-spacing:1.6px;text-transform:uppercase;color:var(--ink-2);opacity:.6}
+  .ad .ad-body{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:20px}
+  .ad .ad-body .sq{width:40px;height:40px;border:1px solid var(--rule-2);border-radius:50%;position:relative}
+  .ad .ad-body .sq::after{content:"";position:absolute;inset:13px;border-radius:50%;background:var(--rule-2)}
+  .ad .ad-body span{font-family:var(--mono);font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#b7b3aa}
+  .nlbox{border:1px solid var(--ink);padding:24px 22px 26px;display:flex;flex-direction:column;gap:12px}
+  .nlbox .k{font-family:var(--mono);font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--blue)}
+  .nlbox h4{margin:0;font-family:var(--sans);font-weight:600;font-size:18px;line-height:1.25;color:var(--ink);text-wrap:pretty}
+  .nlbox p{margin:0;font-family:var(--serif);font-size:13px;line-height:21px;color:var(--ink-2)}
+  .nlbox .field{margin-top:4px;display:flex;align-items:center;border-bottom:1px solid var(--rule);padding-bottom:9px}
+  .nlbox .field input{flex:1 1 auto;border:0;outline:0;background:none;font-family:var(--sans);font-size:13px;color:var(--ink);min-width:0}
+  .nlbox .field input::placeholder{color:#b0aca3}
+  .nlbox .field button{font-family:var(--mono);font-size:14px;color:var(--ink)}
+
+  /* ── RELATED BAND ── */
+  .related-wrap{margin-top:88px}
+  .related{background:var(--white);padding:72px var(--gut);border-top:1px solid var(--rule)}
+  .related .inner{max-width:1440px;margin:0 auto}
+  .related .label-row{margin-bottom:32px}
+  .related .grid{display:grid;grid-template-columns:repeat(3,1fr);column-gap:32px;row-gap:40px}
+  .related .acard .img{aspect-ratio:3/2;--chip:#2a1b2e}
+  .related .acard .body{padding-top:14px}
+  .related .acard h3{font-size:18px}
+
+  /* mobile filter toggle */
+  .filtertoggle{display:none}
+
+  /* ════════ RESPONSIVE ════════ */
+  @media (max-width:1200px){
+    .searchlayout{grid-template-columns:192px minmax(0,1fr);gap:44px}
+    .adrail{grid-column:1 / -1;position:static;flex-direction:row;margin-top:8px}
+    .ad{flex:1 1 0;aspect-ratio:21/9}
+    .nlbox{flex:1 1 0}
+  }
+  @media (max-width:1023px){
+    .searchlayout{display:block;padding-top:0}
+    .filtertoggle{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;
+      margin-top:24px;padding:15px 20px;border:1px solid var(--ink);border-radius:999px;
+      font-family:var(--sans);font-weight:600;font-size:14px;color:var(--ink)}
+    .filtertoggle .n{font-family:var(--mono);font-size:11px;color:var(--white);background:var(--blue);border-radius:999px;min-width:22px;height:22px;display:grid;place-items:center;padding:0 6px}
+    .filtertoggle .n:empty{display:none}
+    .filterpanel{position:static;margin-top:20px;padding:24px 22px;border:1px solid var(--rule);border-radius:14px;display:none}
+    .filterpanel.open{display:flex}
+    .resultsbar{margin-top:36px}
+    .rgrid{grid-template-columns:repeat(2,1fr)}
+    .adrail{flex-direction:row;margin-top:56px}
+  }
+  @media (max-width:640px){
+    .banner .wrap{padding:32px var(--gut) 30px}
+    .rgrid{grid-template-columns:1fr;row-gap:34px}
+    .adrail{flex-direction:column}
+    .ad{aspect-ratio:16/9}
+    .resultsbar{flex-direction:column;align-items:flex-start;gap:14px}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- APP BAR -->
+  <header class="appbar">
+    <button class="iconbtn menu" id="menuBtn" aria-label="เปิดเมนู" aria-expanded="false"><span></span><span></span><span></span></button>
+    <a class="logo" href="CinemaDots Home - Wireframe Build v2-2.html" aria-label="CinemaDots — หน้าแรก">Cinema<span class="dot" aria-hidden="true"></span>Dots</a>
+    <button class="iconbtn search" id="searchBtn" aria-label="ค้นหา" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+    </button>
+  </header>
+
+  <!-- CATEGORY NAV -->
+  <nav class="catnav" aria-label="หมวดหมู่หลัก">
+    <a class="is-active" href="CinemaDots Search Filter.html"><span class="d"></span>ภาพยนตร์</a>
+    <a href="CinemaDots Article List.html"><span class="d"></span>บุคคล</a>
+    <a href="CinemaDots Article List.html"><span class="d"></span>ดนตรี</a>
+    <a href="CinemaDots Article List.html"><span class="d"></span>หนังสือ</a>
+    <a href="CinemaDots Article List.html"><span class="d"></span>ประวัติศาสตร์</a>
+  </nav>
+
+  <main data-screen-label="Search / Filter — ภาพยนตร์">
+
+    <!-- BANNER -->
+    <section class="banner" aria-label="หัวหน้าคลังบทความ">
+      <div class="wrap">
+        <div class="crumb"><a href="CinemaDots Home - Wireframe Build v2-2.html">หน้าแรก</a><span class="sep">/</span><span class="here">ค้นหาบทความ</span></div>
+        <h1 class="htitle"><span class="bdot" aria-hidden="true"></span>คลังบทความภาพยนตร์</h1>
+        <p class="standfirst">ค้นหาและกรองบทวิจารณ์ เรียงความ และบทสัมภาษณ์ทั้งหมด — พิมพ์คำค้น เลือกหมวดหมู่หรือป้ายกำกับ แล้วผลลัพธ์จะปรับทันที</p>
+      </div>
+    </section>
+
+    <div class="searchlayout">
+
+      <!-- LEFT · SEARCH / FILTER -->
+      <button class="filtertoggle" id="filterToggle" aria-expanded="false" aria-controls="filterPanel">
+        <span>ค้นหา / กรอง</span><span class="n" id="toggleCount"></span>
+      </button>
+
+      <aside class="filterpanel" id="filterPanel" aria-label="ค้นหาและกรอง">
+        <div class="fp-top">
+          <span class="lbl"><span class="dot"></span>ค้นหา / กรอง</span>
+          <button class="clear" id="clearAll">ล้างทั้งหมด</button>
+        </div>
+
+        <div class="fp-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <input type="search" id="q" placeholder="ค้นหาชื่อเรื่อง คำสำคัญ…" autocomplete="off" />
+          <button class="x" id="qClear" aria-label="ล้างคำค้น"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        </div>
+
+        <div class="facet" id="facet-cat">
+          <div class="fhead"><span class="lbl">หมวดหมู่</span><span class="rule"></span></div>
+          <!-- options injected -->
+        </div>
+
+        <div class="facet" id="facet-tag">
+          <div class="fhead"><span class="lbl">ป้ายกำกับ</span><span class="rule"></span></div>
+          <!-- options injected -->
+        </div>
+      </aside>
+
+      <!-- CENTER · RESULTS -->
+      <section aria-label="ผลการค้นหา">
+        <div class="resultsbar">
+          <span class="count" id="resultCount">กำลังโหลด…</span>
+          <div class="sortwrap">
+            <label for="sort">เรียงตาม</label>
+            <span class="sel">
+              <select id="sort">
+                <option value="new">ล่าสุด</option>
+                <option value="old">เก่าสุด</option>
+                <option value="az">ชื่อ ก–ฮ</option>
+              </select>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+            </span>
+          </div>
+        </div>
+
+        <div class="rgrid" id="grid"></div>
+
+        <div class="empty" id="empty">
+          <span class="ring"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></span>
+          <h3>ไม่พบบทความที่ตรงกัน</h3>
+          <p>ลองปรับคำค้นหรือล้างตัวกรองบางส่วนเพื่อดูผลลัพธ์เพิ่มเติม</p>
+          <button class="pill-th" id="emptyClear">ล้างตัวกรองทั้งหมด</button>
+        </div>
+
+        <nav class="pager" id="pager" aria-label="หน้า"></nav>
+      </section>
+
+      <!-- RIGHT · ADS -->
+      <aside class="adrail" aria-label="โฆษณาและจดหมายข่าว">
+        <div class="ad">
+          <span class="ad-mark">advertisement</span>
+          <div class="ad-body"><span class="sq"></span><span>ad · 210×280</span></div>
+        </div>
+        <div class="nlbox">
+          <span class="k">จดหมายข่าว</span>
+          <h4>สรุปหนังประจำสัปดาห์ ส่งถึงกล่องจดหมาย</h4>
+          <p>คัดบทวิจารณ์และเรียงความเด่นทุกวันศุกร์</p>
+          <div class="field">
+            <input type="email" placeholder="อีเมลของคุณ" aria-label="อีเมล" />
+            <button aria-label="สมัคร">→</button>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <div class="footer-wrap">
+    <footer class="footer">
+      <div class="cols">
+        <div class="brand">
+          <a class="logo" href="CinemaDots Home - Wireframe Build v2-2.html">Cinema<span class="dot" aria-hidden="true"></span>Dots</a>
+          <p class="quote">“เมื่อภาพยนตร์ คือจุดเริ่มต้น — และจากที่นั่น เราเดินทางไปทุกที่”</p>
+          <div class="wordmark">CINEMADOTS</div>
+          <div class="socials">
+            <a aria-label="facebook" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l1-4h-4V7.5c0-1.1.4-2 2-2h2V2h-3c-3 0-4 1.8-4 4v4H7v4h3v8z"/></svg></a>
+            <a aria-label="instagram" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg></a>
+            <a aria-label="x" href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 3h3l-7 8 8 10h-6l-5-6-5 6H3l8-9L3 3h6l4 5z"/></svg></a>
+            <a aria-label="threads" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M19 8c-1-3-3-5-7-5s-7 2-7 8 3 9 7 9c3 0 5-2 5-4s-2-3-5-3-4 1-4 2"/></svg></a>
+          </div>
+        </div>
+        <div class="lcol">
+          <h6><span class="d"></span>ภาพยนตร์</h6>
+          <ul><li><a href="CinemaDots Search Filter.html">บทวิจารณ์</a></li><li><a href="CinemaDots Search Filter.html">เรียงความ</a></li><li><a href="CinemaDots Search Filter.html">สัมภาษณ์</a></li><li><a href="CinemaDots Search Filter.html">เทศกาล Cannes</a></li><li><a href="CinemaDots Search Filter.html">หนังไทย</a></li></ul>
+        </div>
+        <div class="lcol">
+          <h6><span class="d"></span>บุคคล</h6>
+          <ul><li><a href="CinemaDots Article List.html">ผู้กำกับ</a></li><li><a href="CinemaDots Article List.html">นักแสดง</a></li><li><a href="CinemaDots Article List.html">นักเขียนบท</a></li><li><a href="CinemaDots Article List.html">ช่างภาพ</a></li><li><a href="CinemaDots Article List.html">ทีมหลังกล้อง</a></li></ul>
+        </div>
+        <div class="lcol">
+          <h6><span class="d"></span>ดนตรี</h6>
+          <ul><li><a href="CinemaDots Article List.html">เพลงประกอบ</a></li><li><a href="CinemaDots Article List.html">ศิลปิน</a></li><li><a href="CinemaDots Article List.html">อัลบั้ม</a></li><li><a href="CinemaDots Article List.html">บทสัมภาษณ์</a></li><li><a href="CinemaDots Article List.html">รายการคัดสรร</a></li></ul>
+        </div>
+        <div class="lcol">
+          <h6><span class="d"></span>หนังสือ</h6>
+          <ul><li><a href="CinemaDots Article List.html">การอ่านควบคู่</a></li><li><a href="CinemaDots Article List.html">บทวิจารณ์หนังสือ</a></li><li><a href="CinemaDots Article List.html">เรียงความ</a></li><li><a href="CinemaDots Article List.html">รายการคัดสรร</a></li><li><a href="CinemaDots Article List.html">การเขียนบท</a></li></ul>
+        </div>
+        <div class="lcol">
+          <h6><span class="d"></span>ประวัติศาสตร์</h6>
+          <ul><li><a href="CinemaDots Article List.html">หนังไทยยุค 2510s</a></li><li><a href="CinemaDots Article List.html">หนังไทยยุค 2520s</a></li><li><a href="CinemaDots Article List.html">ฟิล์ม นัวร์</a></li><li><a href="CinemaDots Article List.html">คลังภาพ</a></li><li><a href="CinemaDots Article List.html">โรงหนังเก่า</a></li></ul>
+        </div>
+      </div>
+      <div class="legal">
+        <span>© 2569 CINEMADOTS — ALL THOUGHTS WELCOME.</span>
+        <span class="rt"><a href="#">Terms</a><span class="sep">·</span><a href="#">Privacy</a><span class="sep">·</span><a href="#">RSS</a><span class="sep">·</span><a href="/cdn-cgi/l/email-protection#385b57564c595b4c785b51565d55595c574c4b164c50"><span class="__cf_email__" data-cfemail="30535f5e445153447053595e555d51545f44431e4458">[email&#160;protected]</span></a></span>
+      </div>
+    </footer>
+  </div>
+
+</div>
+
+<!-- MENU OVERLAY -->
+<div class="overlay-panel" id="menuPanel" role="dialog" aria-modal="true" aria-label="เมนูหลัก">
+  <div class="overlay-top">
+    <span></span>
+    <a class="logo" href="CinemaDots Home - Wireframe Build v2-2.html">Cinema<span class="dot" aria-hidden="true"></span>Dots</a>
+    <button class="overlay-close" data-close aria-label="ปิดเมนู"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <nav class="menu-body" aria-label="หมวดหมู่ทั้งหมด">
+    <a class="mlink" href="CinemaDots Search Filter.html">ภาพยนตร์<span class="d"></span></a>
+    <a class="mlink" href="CinemaDots Article List.html">บุคคล<span class="d"></span></a>
+    <a class="mlink" href="CinemaDots Article List.html">ดนตรี<span class="d"></span></a>
+    <a class="mlink" href="CinemaDots Article List.html">หนังสือ<span class="d"></span></a>
+    <a class="mlink" href="CinemaDots Article List.html">ประวัติศาสตร์<span class="d"></span></a>
+    <div class="menu-foot">
+      <span>ฉบับสัปดาห์ที่ 047 · 2569</span>
+      <span>สมัครรับจดหมายข่าว →</span>
+    </div>
+  </nav>
+</div>
+
+<!-- SEARCH OVERLAY -->
+<div class="overlay-panel" id="searchPanel" role="dialog" aria-modal="true" aria-label="ค้นหา">
+  <div class="overlay-top">
+    <span></span>
+    <a class="logo" href="CinemaDots Home - Wireframe Build v2-2.html">Cinema<span class="dot" aria-hidden="true"></span>Dots</a>
+    <button class="overlay-close" data-close aria-label="ปิดการค้นหา"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="search-body">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+      <input id="searchInput" type="search" placeholder="ค้นหาบทความ ผู้กำกับ หรือภาพยนตร์…" autocomplete="off" />
+    </div>
+    <div class="search-sugg">
+      <span class="lbl">คำค้นยอดนิยม</span>
+      <div class="chips">
+        <a href="CinemaDots Search Filter.html">Cannes 2026</a>
+        <a href="CinemaDots Search Filter.html">Hirokazu Koreeda</a>
+        <a href="CinemaDots Search Filter.html">Alien: Romulus</a>
+        <a href="CinemaDots Search Filter.html">Park Chan-wook</a>
+        <a href="CinemaDots Search Filter.html">ฟิล์ม นัวร์</a>
+        <a href="CinemaDots Search Filter.html">เพลงประกอบ</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="assets/cinemadots.js"></script>
+<script src="assets/cinemadots-filter.js"></script>
+</body>
+</html>
