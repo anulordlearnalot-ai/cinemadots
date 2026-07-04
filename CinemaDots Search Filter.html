@@ -86,14 +86,16 @@
   .achip button:hover{background:var(--ink);color:var(--white)}
   .achip button svg{width:11px;height:11px}
 
-  /* card grid — 3 items per row */
-  .rgrid{margin-top:28px;display:grid;grid-template-columns:repeat(3,1fr);column-gap:28px;row-gap:40px}
-  .acard{display:flex;flex-direction:column}
+  /* card grid — one article per row (horizontal list card) */
+  .rgrid{margin-top:28px;display:grid;grid-template-columns:1fr;row-gap:0}
+  .acard{display:grid;grid-template-columns:266px minmax(0,1fr);gap:28px;align-items:start;padding:28px 0;
+    background-image:repeating-linear-gradient(to right,#e2e0da 0 6px,transparent 6px 11px);background-repeat:no-repeat;background-position:left bottom;background-size:100% 1px}
+  .acard:first-child{padding-top:4px}
   .acard .img{aspect-ratio:3/2;--chip:#1c2733}
-  .acard .body{padding-top:13px;display:flex;flex-direction:column;gap:7px}
-  .acard h3{margin:0;font-family:var(--sans);font-weight:500;font-size:17px;line-height:23px;color:var(--ink);text-wrap:pretty}
+  .acard .body{padding-top:2px;display:flex;flex-direction:column;gap:9px}
+  .acard h3{margin:0;font-family:var(--sans);font-weight:500;font-size:22px;line-height:29px;color:var(--ink);text-wrap:pretty}
   .acard:hover h3{color:var(--blue)}
-  .acard p{margin:0;font-family:var(--serif);font-weight:400;font-size:13.5px;line-height:21px;color:var(--ink-2);text-wrap:pretty}
+  .acard p{margin:0;font-family:var(--serif);font-weight:400;font-size:15px;line-height:24px;color:var(--ink-2);text-wrap:pretty;max-width:56ch}
   .acard .metaline{display:flex;align-items:center;gap:9px;margin-top:1px}
   .acard .metaline .date{font-family:var(--sans);font-weight:500;font-size:12px;letter-spacing:.3px;color:var(--ink-2)}
   .acard .metaline .mdot{width:3px;height:3px;border-radius:50%;background:var(--ink-2);opacity:.55}
@@ -167,12 +169,13 @@
     .filterpanel{position:static;margin-top:20px;padding:24px 22px;border:1px solid var(--rule);border-radius:14px;display:none}
     .filterpanel.open{display:flex}
     .resultsbar{margin-top:36px}
-    .rgrid{grid-template-columns:repeat(2,1fr)}
     .adrail{flex-direction:row;margin-top:56px}
   }
   @media (max-width:640px){
     .banner .wrap{padding:32px var(--gut) 30px}
-    .rgrid{grid-template-columns:1fr;row-gap:34px}
+    .rgrid{grid-template-columns:1fr;row-gap:0}
+    .acard{grid-template-columns:1fr;gap:14px;padding:26px 0}
+    .acard h3{font-size:20px;line-height:27px}
     .adrail{flex-direction:column}
     .ad{aspect-ratio:16/9}
     .resultsbar{flex-direction:column;align-items:flex-start;gap:14px}
@@ -329,7 +332,7 @@
       </div>
       <div class="legal">
         <span>© 2569 CINEMADOTS — ALL THOUGHTS WELCOME.</span>
-        <span class="rt"><a href="#">Terms</a><span class="sep">·</span><a href="#">Privacy</a><span class="sep">·</span><a href="#">RSS</a><span class="sep">·</span><a href="/cdn-cgi/l/email-protection#385b57564c595b4c785b51565d55595c574c4b164c50"><span class="__cf_email__" data-cfemail="30535f5e445153447053595e555d51545f44431e4458">[email&#160;protected]</span></a></span>
+        <span class="rt"><a href="#">Terms</a><span class="sep">·</span><a href="#">Privacy</a><span class="sep">·</span><a href="#">RSS</a><span class="sep">·</span><a href="/cdn-cgi/l/email-protection#dcbfb3b2a8bdbfa89cbfb5b2b9b1bdb8b3a8aff2a8b4"><span class="__cf_email__" data-cfemail="3b5854554f5a584f7b5852555e565a5f544f48154f53">[email&#160;protected]</span></a></span>
       </div>
     </footer>
   </div>
